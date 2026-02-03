@@ -1,14 +1,7 @@
 * {
-    /* Шрифт как у тебя в системе */
     font: "Roboto 12";
-
-    /* ГЛАВНОЕ ИСПРАВЛЕНИЕ: Цвет текста теперь ТЕМНЫЙ (#4c4f69), 
-       потому что фон у нас светлый. Теперь ты будешь видеть буквы. */
     text-color: #4c4f69;
-
-    /* Базовый фон прозрачный для закруглений */
     background-color: transparent;
-
     margin:     0px;
     padding:    0px;
     spacing:    0px;
@@ -17,9 +10,7 @@ window {
     location:       center;
     width:          480;
     border-radius:  24px;
-    
     background-color: rgba(255, 233, 250, 0.65);
-    
     border:         2px;
     border-color:   rgba(255, 255, 255, 0.8);
 }
