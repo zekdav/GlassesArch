@@ -1,0 +1,369 @@
+* {
+    font-family: FiraCode, Noto Sans, FontAwesome, Roboto, Helvetica, Arial, sans-serif;
+}
+
+#clock,
+#battery,
+#temperature,
+#network,
+#pulseaudio,
+#custom-media,
+#mode,
+#idle_inhibitor,
+#custom-expand,
+#custom-cycle_wall,
+#custom-ss,
+#custom-dynamic_pill {
+    padding: 0 10px;
+    border-radius: 15px;
+    background-color: rgba(255, 255, 255, 0.2);
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+}
+
+#custom-dynamic_pill {
+    margin-right: 75px; 
+    padding: 0 10px;
+    border-radius: 15px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    transition: all 0.5s cubic-bezier(0.55, -0.68, 0.48, 1.68);
+}
+
+window#waybar {
+    background-color: rgba(0, 0, 0, 0);
+    border-bottom: none;
+    box-shadow: none;
+}
+
+#custom-dynamic_pill label {
+    color: #fff;
+    font-weight: bold;
+}
+
+#custom-dynamic_pill.paused label {
+    color: #fff;
+    font-weight: bolder;
+}
+
+#workspaces {
+    background-color: transparent;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    margin-left: 25px;
+    transition: all 0.5s ease-out;
+}
+
+#workspaces button {
+    box-shadow: rgba(0, 0, 0, 0.1) 2px 2px 5px 2px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    margin-right: 10px;
+    padding: 10px;
+    padding-top: 4px;
+    padding-bottom: 2px;
+    font-weight: bolder;
+    color: #ffffff;
+    transition: all 0.5s cubic-bezier(.55, -.68, .48, 1.68);
+}
+
+#workspaces button:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+    color: #fff;
+}
+
+#workspaces button.active {
+    padding-right: 20px;
+    padding-left: 20px;
+    padding-bottom: 3px;
+    background: linear-gradient(45deg, #f38ba8, #eba0ac);
+    background-size: 300% 300%;
+    animation: gradient_f 10s ease infinite;
+    box-shadow: rgba(0, 0, 0, 0.2) 2px 2px 5px 2px;
+    color: #fff;
+    border: none;
+}
+
+#workspaces button.active label {
+    color: #ffffff;
+    font-weight: bolder;
+}
+
+#workspaces button label {
+    color: #ffffff;
+    font-weight: bolder;
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes gradient_f {
+    0% {
+        background-position: 0% 200%;
+    }
+    50% {
+        background-position: 200% 0%;
+    }
+    100% {
+        background-position: 400% 200%;
+    }
+}
+
+#bluetooth {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #89b4fa;
+    font-size: 15px;
+    border-radius: 15px;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    padding-top: 4px;
+    padding-bottom: 2px;
+    font-weight: bolder;
+    box-shadow: rgba(0, 0, 0, 0.1) 2px 2px 5px 2px;
+    transition: all 0.5s ease;
+}
+
+#bluetooth.connected {
+    background: linear-gradient(90deg,
+            rgba(255, 255, 255, 0.2) 0%,
+            rgba(245, 194, 231, 0.9) 50%,
+            rgba(243, 139, 168, 0.9) 80%,
+            rgba(255, 255, 255, 0.2) 100%);
+    font-size: 14px;
+    background-size: 400% 400%;
+    animation: gradient 10s ease infinite;
+    color: #ffffff;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+#bluetooth.off {
+    background-color: transparent;
+    color: #9399b2;
+    box-shadow: none;
+}
+
+#custom-dynamic_pill.low {
+    background: rgb(148, 226, 213);
+    background: linear-gradient(52deg, rgba(148, 226, 213, 1) 0%, rgba(137, 220, 235, 1) 19%, rgba(116, 199, 236, 1) 43%, rgba(137, 180, 250, 1) 56%, rgba(180, 190, 254, 1) 80%, rgba(186, 187, 241, 1) 100%);
+    background-size: 300% 300%;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.377);
+    animation: gradient 15s ease infinite;
+    font-weight: bolder;
+    color: #fff;
+}
+
+#custom-dynamic_pill.normal {
+    background: rgb(148, 226, 213);
+    background: radial-gradient(circle, rgba(148, 226, 213, 1) 0%, rgba(156, 227, 191, 1) 21%, rgba(249, 226, 175, 1) 34%, rgba(158, 227, 186, 1) 35%, rgba(163, 227, 169, 1) 59%, rgba(148, 226, 213, 1) 74%, rgba(164, 227, 167, 1) 74%, rgba(166, 227, 161, 1) 100%);
+    background-size: 400% 400%;
+    animation: gradient_f 4s ease infinite;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.377);
+    font-weight: bolder;
+    color: #fff;
+}
+
+#custom-dynamic_pill.critical {
+    background: rgb(235, 160, 172);
+    background: linear-gradient(52deg, rgba(235, 160, 172, 1) 0%, rgba(243, 139, 168, 1) 30%, rgba(231, 130, 132, 1) 48%, rgba(250, 179, 135, 1) 77%, rgba(249, 226, 175, 1) 100%);
+    background-size: 300% 300%;
+    animation: gradient 15s cubic-bezier(.55, -.68, .48, 1.68) infinite;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.377);
+    font-weight: bolder;
+    color: #fff;
+}
+
+#custom-dynamic_pill.playing {
+    background: rgb(137, 180, 250);
+    background: radial-gradient(circle, rgba(137, 180, 250, 120) 0%, rgba(142, 179, 250, 120) 6%, rgba(148, 226, 213, 1) 14%, rgba(147, 178, 250, 1) 14%, rgba(155, 176, 249, 1) 18%, rgba(245, 194, 231, 1) 28%, rgba(158, 175, 249, 1) 28%, rgba(181, 170, 248, 1) 58%, rgba(205, 214, 244, 1) 69%, rgba(186, 169, 248, 1) 69%, rgba(195, 167, 247, 1) 72%, rgba(137, 220, 235, 1) 73%, rgba(198, 167, 247, 1) 78%, rgba(203, 166, 247, 1) 100%);
+    background-size: 400% 400%;
+    animation: gradient_f 9s cubic-bezier(.72, .39, .21, 1) infinite;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.377);
+    font-weight: bold;
+    color: #fff;
+}
+
+#custom-dynamic_pill.paused {
+    background-color: rgba(255, 255, 255, 0.2);
+    font-weight: bolder;
+    color: #fff;
+}
+
+#custom-ss {
+    background: #11111b;
+    color: #89b4fa;
+    font-weight: bolder;
+    padding: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-radius: 15px;
+}
+
+#custom-cycle_wall {
+    background: rgb(245, 194, 231);
+    background: linear-gradient(45deg, rgba(245, 194, 231, 1) 0%, rgba(203, 166, 247, 1) 0%, rgba(243, 139, 168, 1) 13%, rgba(235, 160, 172, 1) 26%, rgba(250, 179, 135, 1) 34%, rgba(249, 226, 175, 1) 49%, rgba(166, 227, 161, 1) 65%, rgba(148, 226, 213, 1) 77%, rgba(137, 220, 235, 1) 82%, rgba(116, 199, 236, 1) 88%, rgba(137, 180, 250, 1) 95%);
+    color: #fff;
+    background-size: 500% 500%;
+    animation: gradient 7s linear infinite;
+    font-weight: bolder;
+    border-radius: 15px;
+}
+
+#clock label {
+    color: #11111b;
+    font-weight: bolder;
+}
+
+#clock {
+    background: linear-gradient(90deg,
+            rgba(255, 255, 255, 0.2) 0%,
+            rgba(245, 194, 231, 0.9) 50%,
+            rgba(243, 139, 168, 0.9) 80%,
+            rgba(255, 255, 255, 0.2) 100%);
+    background-size: 400% 400%;
+    animation: gradient 10s ease infinite;
+    color: #fff;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    font-size: 15px;
+    font-weight: bolder;
+    margin-right: 25px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+#battery {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #d1ffcd;
+    font-size: 15px;
+    font-weight: bolder;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+#battery.charging,
+#battery.plugged {
+    color: #94e2d5;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+#battery.critical:not(.charging) {
+    background-color: rgba(243, 139, 168, 0.6);
+    color: #fff;
+    animation-name: blink;
+    animation-duration: 0.5s;
+    animation-iteration-count: infinite;
+}
+
+@keyframes blink {
+    to {
+        background-color: #f9e2af;
+        color: #96804e;
+    }
+}
+
+#network {
+    color: #fff;
+    font-weight: bold;
+}
+
+#network.disabled {
+    background-color: #45475a;
+}
+
+#network.disconnected {
+    background: rgb(243, 139, 168);
+    background: radial-gradient(circle, rgba(245, 194, 231, 0.9) 0%, rgba(243, 139, 168, 0.9) 100%);
+    color: #fff;
+    font-weight: bolder;
+    padding-top: 3px;
+    padding-right: 11px;
+}
+
+#network.linked,
+#network.wifi {
+    background-color: rgba(255, 255, 255, 0.2);
+    background-size: 400% 400%;
+    animation: gradient 10s ease infinite;
+    color: #ffffff;
+    font-weight: 900;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-right: 10px;
+}
+
+#network.ethernet {
+    background-color: #f9e2af;
+}
+
+#pulseaudio {
+    background: rgba(255, 255, 255, 0.2);
+    background-size: 400% 400%;
+    animation: gradient 10s ease infinite;
+    font-weight: bold;
+    font-size: 14px;
+    color: white;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-right: 10px;
+}
+
+#pulseaudio.muted {
+    background: rgba(243, 139, 168, 0.6);
+    animation: none;
+    color: #fff;
+    text-shadow: none;
+}
+
+#custom-media {
+    color: #66cc99;
+}
+
+#custom-media.custom-spotify {
+    background-color: #66cc99;
+}
+
+#custom-media.custom-vlc {
+    background-color: #ffa000;
+}
+
+#temperature {
+    background: linear-gradient(90deg,
+        rgba(255, 255, 255, 0.2) 0%,
+        rgba(194, 217, 245, 0.9) 50%,
+        rgba(159, 196, 245, 0.9) 80%,
+        rgba(255, 255, 255, 0.2) 100%);
+    background-size: 400% 400%;
+    animation: gradient 10s ease infinite;
+    color: #fff;
+    font-weight: bold;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+#temperature.critical {
+    background: linear-gradient(90deg,
+            rgba(255, 255, 255, 0.2) 0%,
+            rgba(245, 194, 231, 0.9) 50%,
+            rgba(243, 139, 168, 0.9) 80%,
+            rgba(255, 255, 255, 0.2) 100%);
+    background-size: 400% 400%;
+    animation: gradient 10s ease infinite;
+    color: #fff;
+    font-weight: bold;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    padding-left: 15px;
+    padding-right: 15px;
+}
