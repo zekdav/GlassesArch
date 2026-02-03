@@ -1,0 +1,1 @@
+mpvpaper -o "no-audio --loop-playlist --hwdec=auto --cache=no --demuxer-max-bytes=128MiB" '*' /path/to/video.mp4

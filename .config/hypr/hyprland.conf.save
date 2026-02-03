@@ -1,0 +1,70 @@
+#  _   _                  _                 _
+# | | | |_   _ _ __  _ __| | __ _ _ __   __| |
+# | |_| | | | | '_ \| '__| |/ _` | '_ \ / _` |
+# |  _  | |_| | |_) | |  | | (_| | | | | (_| |
+# |_| |_|\__, | .__/|_|  |_|\__,_|_| |_|\__,_|
+#        |___/|_|
+# -----------------------------------------------------
+# Monitor
+# -----------------------------------------------------
+source = ~/.config/hypr/conf/monitors/1920x1200.conf
+
+# -----------------------------------------------------
+# Cursor
+# -----------------------------------------------------
+source = ~/.config/hypr/conf/cursors/cursor.conf
+
+# -----------------------------------------------------
+# Environment
+# -----------------------------------------------------
+source = ~/.config/hypr/conf/environments/nvidia.conf
+
+# -----------------------------------------------------
+# Keyboard
+# -----------------------------------------------------
+source = ~/.config/hypr/conf/keyboards/keyboard.conf
+
+# -----------------------------------------------------
+# Load color file
+# -----------------------------------------------------
+source = ~/.config/hypr/colors.conf
+$primary = $primary
+$on_surface = $on_surface
+
+# -----------------------------------------------------
+# Autostart
+# -----------------------------------------------------
+source = ~/.config/hypr/conf/autostart.conf
+
+# -----------------------------------------------------
+# Load configuration files
+# -----------------------------------------------------
+source = ~/.config/hypr/conf/windows/glass.conf
+source = ~/.config/hypr/conf/decorations/blur.conf
+source = ~/.config/hypr/conf/layouts/laptop.conf
+source = ~/.config/hypr/conf/workspaces/default.conf
+source = ~/.config/hypr/conf/miscs/misc.conf
+source = ~/.config/hypr/conf/keybindings/default.conf
+source = ~/.config/hypr/conf/windowrules/default.conf
+
+# -----------------------------------------------------
+# Animation
+# -----------------------------------------------------
+source = ~/.config/hypr/conf/animations/animations-high.conf
+
+# -----------------------------------------------------
+# Environment for xdg-desktop-portal-hyprland
+# -----------------------------------------------------
+exec-once=dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
+
+# -----------------------------------------------------
+# Custom
+# -----------------------------------------------------
+source = ~/.config/hypr/conf/custom.conf
+
+#------------------------------------------------------
+# Waybar
+#------------------------------------------------------
+exec-once = waybar
+
+

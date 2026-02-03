@@ -1,0 +1,18 @@
+#!/usr/bin/bash
+
+~/.config/hypr/scripts/tools/dynamic &
+
+while true
+do
+    WINDOW_COUNT=$(hyprctl activeworkspace -j | jq '.windows')
+
+    out=$(cat ~/.config/hypr/store/dynamic_out.txt)
+
+    if [ "$WINDOW_COUNT" -gt 2 ]; then
+        echo "$out" | jq --unbuffered -c '.text |= if length > 15 then .[0:15] + "..." else . end'
+    else
+        echo "$out" | jq --unbuffered -c '.text |= if length > 40 then .[0:40] + "..." else . end'
+    fi
+
+    sleep 0.5
+done
