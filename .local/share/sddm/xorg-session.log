@@ -1,8 +1,0 @@
-/bin/sh: line 1: dex: command not found
-/bin/sh: line 1: xss-lock: command not found
-/bin/sh: line 1: i3status: command not found
-[../i3bar/src/child.c:412] ERROR: stdin: received EOF
-[../i3bar/src/child.c:662] ERROR: Child (pid: 890) unexpectedly exited with status 127
-
-(nm-applet:885): GLib-GIO-WARNING **: 12:12:55.109: unable to send notifications through org.freedesktop.Notifications: GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Could not activate remote peer 'org.freedesktop.Notifications': unit failed
-Closing SHM log "/i3-log-868"
