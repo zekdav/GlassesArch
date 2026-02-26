@@ -1,10 +1,10 @@
 * {
-    bg-col: #FFFFFA4D;
-    fg-col: #0E0701;
-    col0: #FFFFFA;
-    col1: #AB7B73;
-    col2: #83837A;
-    col3: #C04D33;
-    col4: #68524C;
-    col8: #9D9282;
+    bg-col: #FFFEFF4D;
+    fg-col: #070707;
+    col0: #FFFEFF;
+    col1: #E1D4E1;
+    col2: #BFF3F3;
+    col3: #88ACEA;
+    col4: #798D83;
+    col8: #B0A6AF;
 }
