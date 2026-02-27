@@ -1,4 +1,4 @@
-# 🌸 Glassy Hyprland Dotfiles
+# Glass Hyprland Dotfiles
 
 [![Arch Linux](https://img.shields.io/badge/Arch-Linux-1793D1?logo=arch-linux&logoColor=white)](https://archlinux.org/)
 [![Hyprland](https://img.shields.io/badge/Hyprland-000000?style=flat&logo=hyprland&logoColor=white)](https://hyprland.org/)
@@ -7,15 +7,15 @@ A beautifully customized, highly dynamic Hyprland setup for Arch Linux. Focused 
 
 ### 📸 Desktop Overview
 
-<table>
+<table align="center">
   <tr>
-    <td><img src="demo/photo1.png" alt="Desktop View 1" width="400"/></td>
-    <td><img src="demo/photo2.png" alt="Rofi Menu" width="400"/></td>
+    <td colspan="1"><img src="demo/photo4.png" alt="Terminal and Waybar" width="400"/></td>
+    <td colspan="2"><img src="demo/photo5.png" alt="Clean Desktop" width="600"/></td>
   </tr>
   <tr>
-    <td colspan="2" align="center"><img src="demo/photo3.png" alt="Desktop View 3" width="800"/></td>
-    <td colspan="2" align="center"><img src="demo/photo4.png" alt="Desktop View 3" width="800"/></td>
-    <td colspan="2" align="center"><img src="demo/photo5.png" alt="Desktop View 3" width="800"/></td>
+    <td><img src="demo/photo1.png" alt="Theme 1" width="330"/></td>
+    <td><img src="demo/photo2.png" alt="Theme 2" width="330"/></td>
+    <td><img src="demo/photo3.png" alt="Theme 3" width="330"/></td>
   </tr>
 </table>
 
@@ -50,10 +50,24 @@ A beautifully customized, highly dynamic Hyprland setup for Arch Linux. Focused 
 
 Everything is designed to be controlled smoothly from the keyboard.
 
-* `SUPER + Q` = Open Kitty Terminal
-* `SUPER + W` = **Magic Keybind**: Cycle to the next wallpaper (Image or Video) in the directory, restart the background process, extract a new color palette via Wallust, and inject it into the entire system instantly.
-* `SUPER + ALT + Space` = Open Rofi Menu
-* *(Add your other favorite keybinds here)*
+**System & Magic:**
+* `SUPER + W` = Cycle to the next wallpaper (Image or Video) in the directory, restart the background process, extract a new color palette via Wallust, and inject it into the entire system instantly.
+* `SUPER + Enter` = Open Kitty Terminal
+* `SUPER` = Open Rofi App Launcher
+* `SUPER + E` = Open File Manager
+
+**Window Management:**
+* `SUPER + Q` = Close active window
+* `SUPER + Shift + Q` = Fource close active window
+* `SUPER + V` = Open clipboard
+* `SUPER + F` = Toggle fullscreen
+* `SUPER + A` = fullscreen
+* `SUPER + Left/Right/Up/Down` = Move focus between windows
+* `SUPER + alt + Left/Right/Up/Down` = Change window place
+
+**Workspaces:**
+* `SUPER + [1-9]` = Switch to workspace 1-9
+* `SUPER + SHIFT + [1-9]` = Move active window to workspace 1-9
 
 ---
 
