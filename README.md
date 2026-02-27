@@ -9,7 +9,7 @@ A beautifully customized, highly dynamic Hyprland setup for Arch Linux. Focused 
 
 <table>
   <tr>
-    <td><img src="demo/1.jpg" alt="Desktop View 1" width="400"/></td>
+    <td><img src="demo/photo1.jpg" alt="Desktop View 1" width="400"/></td>
     <td><img src="demo/2.jpg" alt="Rofi Menu" width="400"/></td>
   </tr>
   <tr>
