@@ -22,7 +22,7 @@ A beautifully customized, highly dynamic Hyprland setup for Arch Linux. Focused 
 ### 🎥 Live Preview
 
 <div align="center">
-  <video src="demo/output.mp4" alt="video" width="500"></video>
+  <video src="demo/output.mp4" width="500" autoplay loop muted controls playsinline></video>video>
 </div>
 
 ---
