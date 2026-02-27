@@ -1,4 +1,4 @@
-    {
+{
     "layer": "top",
     "position": "top",
     "height": 53,
@@ -7,6 +7,7 @@
     "modules-left": [
         "hyprland/workspaces"
     ],
+    "modules-center": [],
     "modules-right": [
         "network",
         "pulseaudio",
@@ -15,38 +16,10 @@
         "temperature",
         "clock"
     ],
-    "modules-center": [
-        "custom/dynamic_pill"
-    ],
-    "custom/dynamic_pill": {
-        "return-type": "json",
-        "exec": "~/.config/hypr/scripts/tools/start_dyn",
-        "max-length": 27,
-        "tooltip": true
-    },
-    "keyboard-state": {
-        "numlock": true,
-        "capslock": true,
-        "format": "{name} {icon}",
-        "format-icons": {
-            "locked": "",
-            "unlocked": ""
-        }
-    },
     "hyprland/workspaces": {
         "format": "{icon}",
         "format-active": " {icon} ",
         "on-click": "activate"
-    },
-    "sway/mode": {
-        "format": "<span style=\"italic\">{}</span>"
-    },
-    "idle_inhibitor": {
-        "format": "{icon}",
-        "format-icons": {
-            "activated": "",
-            "deactivated": ""
-        }
     },
     "clock": {
         "timezone": "Europe/Warsaw",
@@ -54,9 +27,6 @@
         "interval": 60,
         "format": "{:%I:%M}",
         "max-length": 25
-    },
-    "memory": {
-        "format": "{}% "
     },
     "temperature": {
         "critical-threshold": 75,
@@ -74,21 +44,13 @@
         "tooltip-format": "{timeTo}",
         "format-icons": ["", "", "", "", ""]
     },
-    "battery#bat2": {
-        "bat": "BAT2"
-    },
     "network": {
         "format-wifi": "    {essid}",
         "format-ethernet": " {ifname}",
         "format-linked": "{ifname} (No IP) ",
         "format-disconnected": "⚠ Disconnected",
         "tooltip-format": "{essid} ({signalStrength}%)",
-        "format-icons": [
-            "",
-            "",
-            "",
-            ""
-        ],
+        "format-icons": ["", "", "", ""],
         "on-click": "nm-connection-editor"
     },
     "bluetooth": {
@@ -114,23 +76,8 @@
             "phone": "",
             "portable": "",
             "car": "",
-            "default": [
-                "",
-                "",
-                ""
-            ]
+            "default": ["", "", ""]
         },
         "on-click": "pavucontrol"
-    },
-    "custom/media": {
-        "format": "{icon} {}",
-        "return-type": "json",
-        "max-length": 40,
-        "format-icons": {
-            "spotify": "",
-            "default": "🎜"
-        },
-        "escape": true,
-        "exec": "$HOME/.config/waybar/mediaplayer.py 2> /dev/null"
     }
 }

@@ -15,7 +15,7 @@ window {
     border-radius: 24px;
     background-color: @bg-col;
     border: 2px;
-    border-color: @col4;
+    border-color: @border-col;
 }
 
 mainbox {
@@ -25,7 +25,6 @@ mainbox {
 inputbar {
     background-color: transparent;
     border: 0px;
-    border-radius: 0px;
     padding: 8px 16px;
     spacing: 8px;
     children: [ entry ];
@@ -33,19 +32,8 @@ inputbar {
 
 entry {
     placeholder: "Search...";
-    placeholder-color: @col8; 
+    placeholder-color: @col8;
     text-color: @fg-col;
-}
-
-message {
-    margin: 12px 0 0;
-    border-radius: 16px;
-    border-color: @col1;
-    background-color: @col0;
-}
-
-textbox {
-    padding: 8px 24px;
 }
 
 listview {
@@ -61,16 +49,11 @@ element {
     spacing: 12px;
     border-radius: 12px;
     background-color: transparent;
-    text-color: #000000;
-}
-
-element normal active {
-    text-color: @col1;
 }
 
 element selected normal, element selected active {
-    background-color: @col4;
-    text-color: #ffffff;
+    background-color: @sel-bg;
+    text-color: @fg-col;
 }
 
 element-icon {

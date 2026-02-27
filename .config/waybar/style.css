@@ -1,36 +1,7 @@
 @import "colors.css";
 
 * {
-    font-family: FiraCode, Noto Sans, FontAwesome, Roboto, Helvetica, Arial, sans-serif;
-}
-
-#clock,
-#battery,
-#temperature,
-#network,
-#pulseaudio,
-#custom-media,
-#mode,
-#idle_inhibitor,
-#custom-expand,
-#custom-cycle_wall,
-#custom-ss,
-#custom-dynamic_pill {
-    padding: 0 10px;
-    border-radius: 15px;
-    background-color: alpha(@foreground, 0.2);
-    margin-top: 10px;
-    margin-bottom: 10px;
-    margin-right: 10px;
-}
-
-#custom-dynamic_pill {
-    margin-right: 75px; 
-    padding: 0 10px;
-    border-radius: 15px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    transition: all 0.5s cubic-bezier(0.55, -0.68, 0.48, 1.68);
+    font-family: FiraCode, "Noto Sans", FontAwesome, Roboto, Helvetica, Arial, sans-serif;
 }
 
 window#waybar {
@@ -39,23 +10,21 @@ window#waybar {
     box-shadow: none;
 }
 
-#custom-dynamic_pill label {
-    color: @foreground;
-    font-weight: bold;
-}
-
-#custom-dynamic_pill.paused label {
-    color: @foreground;
-    font-weight: bolder;
+#clock,
+#battery,
+#temperature,
+#network,
+#pulseaudio,
+#bluetooth {
+    padding: 0 10px;
+    border-radius: 15px;
+    background-color: alpha(@foreground, 0.2);
+    margin: 10px 10px 10px 0;
 }
 
 #workspaces {
     background-color: transparent;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    margin-right: 10px;
-    margin-left: 25px;
-    transition: all 0.5s ease-out;
+    margin: 10px 10px 10px 25px;
 }
 
 #workspaces button {
@@ -63,34 +32,22 @@ window#waybar {
     background-color: alpha(@foreground, 0.2);
     border-radius: 15px;
     margin-right: 10px;
-    padding: 10px;
-    padding-top: 4px;
-    padding-bottom: 2px;
+    padding: 4px 10px 2px 10px;
     font-weight: bolder;
     color: @foreground;
-    transition: all 0.5s cubic-bezier(.55, -.68, .48, 1.68);
 }
 
 #workspaces button:hover {
     background-color: alpha(@foreground, 0.4);
-    color: @foreground;
 }
 
 #workspaces button.active {
-    padding-right: 20px;
-    padding-left: 20px;
-    padding-bottom: 3px;
+    padding: 4px 20px 3px 20px;
     background: linear-gradient(45deg, @color1, @color2);
     background-size: 300% 300%;
-    animation: gradient_f 10s ease infinite;
     box-shadow: rgba(0, 0, 0, 0.2) 2px 2px 5px 2px;
     color: @background;
     border: none;
-}
-
-#workspaces button.active label {
-    color: @background;
-    font-weight: bolder;
 }
 
 #workspaces button label {
@@ -98,42 +55,27 @@ window#waybar {
     font-weight: bolder;
 }
 
-@keyframes gradient {
-    0% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0% 50%;
-    }
+#workspaces button.active label {
+    color: @background;
 }
 
-@keyframes gradient_f {
-    0% {
-        background-position: 0% 200%;
-    }
-    50% {
-        background-position: 200% 0%;
-    }
-    100% {
-        background-position: 400% 200%;
+@keyframes gradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes blink {
+    to {
+        background-color: @color3;
+        color: @background;
     }
 }
 
 #bluetooth {
-    background-color: alpha(@foreground, 0.2);
-    color: @color4;
+    color: #6E69FF;
     font-size: 15px;
-    border-radius: 15px;
-    padding: 10px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    margin-right: 10px;
-    padding-top: 4px;
-    padding-bottom: 2px;
-    font-weight: bolder;
+    padding: 4px 10px 2px 10px;
     box-shadow: rgba(0, 0, 0, 0.1) 2px 2px 5px 2px;
     transition: all 0.5s ease;
 }
@@ -157,72 +99,6 @@ window#waybar {
     box-shadow: none;
 }
 
-#custom-dynamic_pill.low {
-    background: linear-gradient(52deg, @color6 0%, @color4 19%, @color5 56%, @color1 100%);
-    background-size: 300% 300%;
-    text-shadow: 0 0 5px rgba(0, 0, 0, 0.377);
-    animation: gradient 15s ease infinite;
-    font-weight: bolder;
-    color: @background;
-}
-
-#custom-dynamic_pill.normal {
-    background: radial-gradient(circle, @color2 0%, @color3 34%, @color6 100%);
-    background-size: 400% 400%;
-    animation: gradient_f 4s ease infinite;
-    text-shadow: 0 0 5px rgba(0, 0, 0, 0.377);
-    font-weight: bolder;
-    color: @background;
-}
-
-#custom-dynamic_pill.critical {
-    background: linear-gradient(52deg, @color1 0%, @color3 100%);
-    background-size: 300% 300%;
-    animation: gradient 15s cubic-bezier(.55, -.68, .48, 1.68) infinite;
-    text-shadow: 0 0 5px rgba(0, 0, 0, 0.377);
-    font-weight: bolder;
-    color: @foreground;
-}
-
-#custom-dynamic_pill.playing {
-    background: radial-gradient(circle, @color4 0%, @color6 14%, @color5 28%, @color1 69%, @color3 100%);
-    background-size: 400% 400%;
-    animation: gradient_f 9s cubic-bezier(.72, .39, .21, 1) infinite;
-    text-shadow: 0 0 5px rgba(0, 0, 0, 0.377);
-    font-weight: bold;
-    color: @background;
-}
-
-#custom-dynamic_pill.paused {
-    background-color: alpha(@foreground, 0.2);
-    font-weight: bolder;
-    color: @foreground;
-}
-
-#custom-ss {
-    background: @background;
-    color: @color4;
-    font-weight: bolder;
-    padding: 5px;
-    padding-left: 20px;
-    padding-right: 20px;
-    border-radius: 15px;
-}
-
-#custom-cycle_wall {
-    background: linear-gradient(45deg, @color5 0%, @color4 13%, @color1 26%, @color3 49%, @color2 65%, @color6 100%);
-    color: @background;
-    background-size: 500% 500%;
-    animation: gradient 7s linear infinite;
-    font-weight: bolder;
-    border-radius: 15px;
-}
-
-#clock label {
-    color: @background;
-    font-weight: bolder;
-}
-
 #clock {
     background: linear-gradient(90deg,
             alpha(@foreground, 0.2) 0%,
@@ -236,38 +112,29 @@ window#waybar {
     font-size: 15px;
     font-weight: bolder;
     margin-right: 25px;
-    padding-left: 15px;
-    padding-right: 15px;
+    padding: 0 15px;
+}
+
+#clock label {
+    color: @background;
 }
 
 #battery {
-    background-color: alpha(@foreground, 0.2);
     color: @color2;
     font-size: 15px;
     font-weight: bolder;
-    padding-left: 10px;
-    padding-right: 10px;
 }
 
 #battery.charging,
 #battery.plugged {
     color: @color6;
-    background-color: alpha(@foreground, 0.2);
+    background-color: alpha(@background, 0.7);
 }
 
 #battery.critical:not(.charging) {
     background-color: alpha(@color1, 0.6);
     color: @foreground;
-    animation-name: blink;
-    animation-duration: 0.5s;
-    animation-iteration-count: infinite;
-}
-
-@keyframes blink {
-    to {
-        background-color: @color3;
-        color: @background;
-    }
+    animation: blink 0.5s infinite;
 }
 
 #network {
@@ -281,22 +148,16 @@ window#waybar {
 
 #network.disconnected {
     background: radial-gradient(circle, alpha(@color5, 0.9) 0%, alpha(@color1, 0.9) 100%);
-    color: @foreground;
-    font-weight: bolder;
-    padding-top: 3px;
-    padding-right: 11px;
+    padding: 3px 11px 0 10px;
 }
 
 #network.linked,
 #network.wifi {
-    background-color: alpha(@foreground, 0.2);
+    background-color: alpha(@background, 0.7);
     background-size: 400% 400%;
     animation: gradient 10s ease infinite;
-    color: @foreground;
     font-weight: 900;
-    padding-left: 15px;
-    padding-right: 15px;
-    margin-right: 10px;
+    padding: 0 15px;
 }
 
 #network.ethernet {
@@ -304,62 +165,44 @@ window#waybar {
 }
 
 #pulseaudio {
-    background: alpha(@foreground, 0.2);
     background-size: 400% 400%;
     animation: gradient 10s ease infinite;
     font-weight: bold;
     font-size: 14px;
     color: @foreground;
-    padding-left: 15px;
-    padding-right: 15px;
-    margin-right: 10px;
+    padding: 0 15px;
 }
 
 #pulseaudio.muted {
     background: alpha(@color1, 0.6);
     animation: none;
-    color: @foreground;
     text-shadow: none;
-}
-
-#custom-media {
-    color: @color2;
-}
-
-#custom-media.custom-spotify {
-    background-color: @color2;
-}
-
-#custom-media.custom-vlc {
-    background-color: @color3;
 }
 
 #temperature {
     background: linear-gradient(90deg,
         alpha(@foreground, 0.2) 0%,
-        alpha(@color4, 0.9) 50%,
-        alpha(@color6, 0.9) 80%,
+        rgba(160, 185, 165, 0.5) 50%,
+        rgba(130, 155, 135, 0.6) 80%,
         alpha(@foreground, 0.2) 100%);
     background-size: 400% 400%;
     animation: gradient 10s ease infinite;
     color: @foreground;
     font-weight: bold;
     text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-    padding-left: 15px;
-    padding-right: 15px;
+    padding: 0 15px;
 }
 
 #temperature.critical {
     background: linear-gradient(90deg,
-            alpha(@foreground, 0.2) 0%,
-            alpha(@color5, 0.9) 50%,
-            alpha(@color1, 0.9) 80%,
-            alpha(@foreground, 0.2) 100%);
+        alpha(@foreground, 0.2) 0%,
+        rgba(239, 83, 80, 0.8) 50%,
+        rgba(211, 47, 47, 0.9) 80%,
+        alpha(@foreground, 0.2) 100%);
     background-size: 400% 400%;
     animation: gradient 10s ease infinite;
     color: @foreground;
     font-weight: bold;
     text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-    padding-left: 15px;
-    padding-right: 15px;
+    padding: 0 15px;
 }

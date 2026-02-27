@@ -1,0 +1,12 @@
+* {
+    bg-col: {{background}}E6;
+    fg-col: {{foreground}};
+    border-col: {{foreground}}1A;
+    sel-bg: {{color4}}80;
+    col0: {{color0}};
+    col1: {{color1}};
+    col2: {{color2}};
+    col3: {{color3}};
+    col4: {{color4}};
+    col8: {{color8}};
+}
