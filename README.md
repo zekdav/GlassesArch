@@ -19,8 +19,6 @@ A beautifully customized, highly dynamic Hyprland setup for Arch Linux. Focused 
   </tr>
 </table>
 
-<video src="demo/output.mp4" alt="video" width="500">
-
 ---
 
 ## ✨ Key Features
