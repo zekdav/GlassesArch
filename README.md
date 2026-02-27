@@ -60,10 +60,10 @@ Everything is designed to be controlled smoothly from the keyboard.
 
 **Window Management:**
 * `SUPER + Q` = Close active window
-* `SUPER + Shift + Q` = Fource close active window
+* `SUPER + Shift + Q` = Force close active window
 * `SUPER + V` = Open clipboard
 * `SUPER + F` = Toggle fullscreen
-* `SUPER + A` = fullscreen
+* `SUPER + A` = Toggle maximize
 * `SUPER + Left/Right/Up/Down` = Move focus between windows
 * `SUPER + alt + Left/Right/Up/Down` = Change window place
 
@@ -80,6 +80,7 @@ Everything is designed to be controlled smoothly from the keyboard.
    
    ```bash
    yay -S hyprland waybar rofi-wayland kitty waypaper mpvpaper swaybg wallust ffmpeg
+
 3. Backup your existing configurations!
 
 4. Copy the contents of the config folder to your ~/.config/ directory.
