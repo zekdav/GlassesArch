@@ -17,10 +17,9 @@ A beautifully customized, highly dynamic Hyprland setup for Arch Linux. Focused 
     <td><img src="demo/photo5.png" alt="Theme 2" width="330"/></td>
     <td><img src="demo/photo3.png" alt="Theme 3" width="330"/></td>
   </tr>
-  <tr>
-    <td><video src="demo/output.mp4" alt="video" width="500"></td>
-  </tr>
 </table>
+
+<video src="demo/output.mp4" alt="video" width="500">
 
 ---
 
