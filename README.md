@@ -1,4 +1,4 @@
-# GlassesArch 👓
+Dotfiles for Hyprland on Arch Linux
 
 Welcome to my personal setup for Arch Linux, built around the Hyprland Wayland compositor. This repository contains all the necessary configuration files, themes, and a package list to replicate this environment.
 
@@ -27,3 +27,5 @@ Clone the repository to your local machine:
 ```bash
 git clone [https://github.com/zekdav/GlassesArch.git](https://github.com/zekdav/GlassesArch.git)
 cd GlassesArch
+
+## Screenshots & videos
