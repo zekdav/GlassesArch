@@ -22,7 +22,7 @@ A beautifully customized, highly dynamic Hyprland setup for Arch Linux. Focused 
 ### 🎥 Live Preview
 
 <div align="center">
-  <video src="https://github.com/zekdav/GlassesArch/raw/main/demo/output.mp4" autoplay loop muted controls playsinline width="500"></video>
+  <video src="https://github.com/user-attachments/assets/6aa2f99d-8b1a-4505-8bfd-b29d9618adcb" autoplay loop muted controls playsinline width="500"></video>
 </div>
 
 ---
