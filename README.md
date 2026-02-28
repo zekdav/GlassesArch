@@ -127,9 +127,12 @@ The main modifier key is `SUPER`.
 
 6. Press Super + W to initialize the dynamic theming script. Enjoy!
 
-```markdown
-  ## 🤝 Contributing
-  Contributions are always welcome! See `CONTRIBUTING.md` for ways to get started.
+---
 
-  ## 📄 License
-  This project is licensed under the MIT License - see the `LICENSE` file for details.
+## 🤝 Contributing
+Contributions are always welcome! See `CONTRIBUTING.md` for ways to get started.
+
+---
+
+## 📄 License
+This project is licensed under the MIT License - see the `LICENSE` file for details.
