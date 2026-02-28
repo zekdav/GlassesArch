@@ -4,22 +4,22 @@
 [![Hyprland](https://img.shields.io/badge/Hyprland-000000?style=flat&logo=hyprland&logoColor=white)](https://hyprland.org/)
 
 A beautifully customized, highly dynamic Hyprland setup for Arch Linux. Focused on seamless glassmorphism aesthetics, live video wallpapers, and 100% automated dynamic theming. 
-
 ### 📸 Desktop Overview
 
-<table align="center">
+<table align="center" width="100%">
   <tr>
-    <td colspan="1"><img src="demo/photo2.png" alt="Terminal and Waybar" width="450"/></td>
-    <td colspan="2"><img src="demo/photo1.png " alt="Clean Desktop" width="450" heigth="100"/></td>
+    <td colspan="3"><img src="demo/photo2.png" alt="Terminal and Waybar" width="100%"/></td>
+    <td colspan="3"><img src="demo/photo1.png" alt="Clean Desktop" width="100%"/></td>
   </tr>
+  
   <tr>
-    <td><img src="demo/photo4.png" alt="Theme 1" width="400"/></td>
-    <td><img src="demo/photo5.png" alt="Theme 2" width="400"/></td>
-    <td><img src="demo/photo3.png" alt="Theme 3" width="400"/></td>
+    <td colspan="2"><img src="demo/photo4.png" alt="Theme 1" width="100%"/></td>
+    <td colspan="2"><img src="demo/photo5.png" alt="Theme 2" width="100%"/></td>
+    <td colspan="2"><img src="demo/photo3.png" alt="Theme 3" width="100%"/></td>
   </tr>
+  
   <tr>
-    <td><img width="1200" height="900" alt="image" src="https://github.com/user-attachments/assets/35304d89-f164-4e93-8987-9e7b37cad49d" />
-</td>
+    <td colspan="6"><img src="https://github.com/user-attachments/assets/35304d89-f164-4e93-8987-9e7b37cad49d" alt="Wlogout Menu" width="100%"/></td>
   </tr>
 </table>
 
