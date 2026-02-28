@@ -126,3 +126,10 @@ The main modifier key is `SUPER`.
 5. Place your favorite images and videos in ~/Pictures/wallpapers.
 
 6. Press Super + W to initialize the dynamic theming script. Enjoy!
+
+```markdown
+  ## 🤝 Contributing
+  Contributions are always welcome! See `CONTRIBUTING.md` for ways to get started.
+
+  ## 📄 License
+  This project is licensed under the MIT License - see the `LICENSE` file for details.
