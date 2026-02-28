@@ -4,7 +4,7 @@
 [![Hyprland](https://img.shields.io/badge/Hyprland-000000?style=flat&logo=hyprland&logoColor=white)](https://hyprland.org/)
 
 A beautifully customized, highly dynamic Hyprland setup for Arch Linux. Focused on seamless glassmorphism aesthetics, live video wallpapers, and 100% automated dynamic theming. 
-### 📸 Desktop Overview
+### Desktop Overview
 
 <table align="center" width="100%">
   <tr>
@@ -23,7 +23,7 @@ A beautifully customized, highly dynamic Hyprland setup for Arch Linux. Focused 
   </tr>
 </table>
 
-### 🎥 Live Preview
+### Live Preview
 
 <div align="center">
   <video src="https://github.com/user-attachments/assets/6aa2f99d-8b1a-4505-8bfd-b29d9618adcb" autoplay loop muted controls playsinline width="500"></video>
@@ -31,7 +31,7 @@ A beautifully customized, highly dynamic Hyprland setup for Arch Linux. Focused 
 
 ---
 
-## ✨ Key Features
+## Key Features
 
 * **True Dynamic Theming (`Wallust`)**: System colors are automatically generated on the fly. The custom scripts extract colors not only from static images but also grab frames from **.mp4 / .webm** video wallpapers to keep the theme perfectly synced.
 * **Glassmorphism UI**: Waybar and Rofi feature a beautifully tuned, semi-transparent frosted glass effect that blends perfectly with bright and pastel wallpapers.
@@ -45,7 +45,7 @@ A beautifully customized, highly dynamic Hyprland setup for Arch Linux. Focused 
 
 ---
 
-## 🧩 Components
+## Components
 
 * **Window Manager:** [Hyprland](https://hyprland.org/)
 * **Bar:** [Waybar](https://github.com/Alexays/Waybar) (Custom Glassy CSS)
@@ -56,7 +56,7 @@ A beautifully customized, highly dynamic Hyprland setup for Arch Linux. Focused 
 
 ---
 
-## ⌨️ Keybinds
+## Keybinds
 
 The main modifier key is `SUPER`.
 
@@ -111,7 +111,7 @@ The main modifier key is `SUPER`.
 
 ---
 
-## ⚙️ Installation
+## Installation
 
 1. Clone this repository to your home folder.
 2. Ensure you have the required dependencies installed via `pacman` or `yay`:
