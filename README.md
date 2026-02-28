@@ -18,7 +18,7 @@ A beautifully customized, highly dynamic Hyprland setup for Arch Linux. Focused 
     <td><img src="demo/photo3.png" alt="Theme 3" width="400"/></td>
   </tr>
   <tr>
-    <td><img width="1200" height="100" alt="image" src="https://github.com/user-attachments/assets/35304d89-f164-4e93-8987-9e7b37cad49d" />
+    <td><img width="1200" height="900" alt="image" src="https://github.com/user-attachments/assets/35304d89-f164-4e93-8987-9e7b37cad49d" />
 </td>
   </tr>
 </table>
