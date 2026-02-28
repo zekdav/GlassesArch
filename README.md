@@ -58,26 +58,56 @@ A beautifully customized, highly dynamic Hyprland setup for Arch Linux. Focused 
 
 ## ⌨️ Keybinds
 
-Everything is designed to be controlled smoothly from the keyboard.
+The main modifier key is `SUPER`.
 
-**System & Magic:**
-* `SUPER + W` = Cycle to the next wallpaper (Image or Video) in the directory, restart the background process, extract a new color palette via Wallust, and inject it into the entire system instantly.
-* `SUPER + Enter` = Open Kitty Terminal
+**System & Actions:**
+* `SUPER + W` = Cycle to the next wallpaper and extract a new color palette via Wallust
 * `SUPER` = Open Rofi App Launcher
-* `SUPER + E` = Open File Manager
+* `SUPER + N` = Open Notification Center (SwayNC)
+* `SUPER + V` = Open Clipboard Manager
+* `SUPER + Print` = Take a screenshot (Grim + Satty)
+* `SUPER + CTRL + R` = Reload Hyprland configuration
+* `Power Button` = Open fullscreen power menu (Wlogout)
+
+**Applications:**
+* `SUPER + Return` = Open Kitty Terminal
+* `SUPER + B` = Open Firefox Developer Edition
+* `SUPER + E` = Open File Manager (Nautilus)
+* `SUPER + C` = Open VS Code
 
 **Window Management:**
-* `SUPER + Q` = Close active window
-* `SUPER + Shift + Q` = Force close active window
-* `SUPER + V` = Open clipboard
+* `SUPER + Q` = Kill active window
+* `SUPER + SHIFT + Q` = Kill active window and all open instances
 * `SUPER + F` = Toggle fullscreen
-* `SUPER + A` = Toggle maximize
+* `SUPER + M` = Maximize window
+* `SUPER + T` = Toggle floating mode for active window
+* `SUPER + SHIFT + T` = Toggle all windows into floating mode
+* `SUPER + J` = Toggle split
+* `SUPER + K` = Swap split
 * `SUPER + Left/Right/Up/Down` = Move focus between windows
-* `SUPER + alt + Left/Right/Up/Down` = Change window place
+* `SUPER + ALT + Left/Right/Up/Down` = Swap tiled windows
+* `SUPER + SHIFT + Left/Right/Up/Down` = Resize active window
+* `ALT + Tab` = Cycle between open windows and bring to top
+* `SUPER + Left Mouse Button` = Move window
+* `SUPER + Right Mouse Button` = Resize window
+
+**Display & Zoom:**
+* `SUPER + SHIFT + Mouse Scroll Up/Down` = Increase/Decrease display zoom
+* `SUPER + SHIFT + Z` = Reset display zoom
 
 **Workspaces:**
-* `SUPER + [1-9]` = Switch to workspace 1-9
-* `SUPER + SHIFT + [1-9]` = Move active window to workspace 1-9
+* `SUPER + [1-0]` = Switch to workspace 1-10
+* `SUPER + SHIFT + [1-0]` = Move active window to workspace 1-10
+
+**Function Keys (Fn):**
+* `Volume Up/Down/Mute` = Control audio volume
+* `Mic Mute` = Toggle microphone
+* `Brightness Up/Down` = Control screen brightness
+* `Keyboard Backlight Up/Down` = Control keyboard brightness
+* `Media Play/Pause/Next/Prev` = Control media playback
+* `Lock` = Lock screen (Hyprlock)
+* `Calculator` = Open calculator
+* `Tools` = Open ML4W Dotfiles Settings app
 
 ---
 
