@@ -9,13 +9,13 @@ A beautifully customized, highly dynamic Hyprland setup for Arch Linux. Focused 
 
 <table align="center">
   <tr>
-    <td colspan="1"><img src="demo/photo2.png" alt="Terminal and Waybar" width="350"/></td>
+    <td colspan="1"><img src="demo/photo2.png" alt="Terminal and Waybar" width="450"/></td>
     <td colspan="2"><img src="demo/photo1.png" alt="Clean Desktop" width="450"/></td>
   </tr>
   <tr>
-    <td><img src="demo/photo4.png" alt="Theme 1" width="330"/></td>
-    <td><img src="demo/photo5.png" alt="Theme 2" width="330"/></td>
-    <td><img src="demo/photo3.png" alt="Theme 3" width="330"/></td>
+    <td><img src="demo/photo4.png" alt="Theme 1" width="400"/></td>
+    <td><img src="demo/photo5.png" alt="Theme 2" width="400"/></td>
+    <td><img src="demo/photo3.png" alt="Theme 3" width="400"/></td>
   </tr>
 </table>
 
