@@ -1,0 +1,41 @@
+@import "colors.css";
+
+* {
+    font-family: "Noto Sans", sans-serif;
+    background-image: none;
+    transition: 200ms;
+}
+
+window {
+    /* Полупрозрачный фон на весь экран */
+    background-color: alpha(@background, 0.7); 
+}
+
+button {
+    color: @foreground;
+    /* Полупрозрачные стеклянные кнопки */
+    background-color: alpha(@color4, 0.4);
+    border-style: solid;
+    border-width: 2px;
+    border-color: alpha(@foreground, 0.1);
+    border-radius: 30px;
+    margin: 20px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 25%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
+}
+
+button:focus, button:active, button:hover {
+    background-color: alpha(@color2, 0.7);
+    border-color: @color2;
+    outline-style: none;
+}
+
+/* Стандартные иконки из системы */
+#lock { background-image: image(url("/usr/share/wlogout/icons/lock.png")); }
+#logout { background-image: image(url("/usr/share/wlogout/icons/logout.png")); }
+#suspend { background-image: image(url("/usr/share/wlogout/icons/suspend.png")); }
+#hibernate { background-image: image(url("/usr/share/wlogout/icons/hibernate.png")); }
+#shutdown { background-image: image(url("/usr/share/wlogout/icons/shutdown.png")); }
+#reboot { background-image: image(url("/usr/share/wlogout/icons/reboot.png")); }

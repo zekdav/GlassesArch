@@ -6,3 +6,5 @@ waybar = { template = "colors-waybar.css", target = "~/.config/waybar/colors.css
 rofi = { template = "colors-rofi.rasi", target = "~/.config/rofi/colors.rasi" }
 kitty = { template = "colors-kitty.conf", target = "~/.config/kitty/colors.conf" }
 hyprland = { template = "colors-hyprland.conf", target = "/home/zek/.config/hypr/colors-wallust.conf" }
+wlogout = { template = "colors-wlogout.css", target = "~/.config/wlogout/colors.css" }
+swaync = { template = "colors-swaync.css", target = "~/.config/swaync/colors.css" }
