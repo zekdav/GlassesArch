@@ -19,7 +19,7 @@ A beautifully customized, highly dynamic Hyprland setup for Arch Linux. Focused 
   </tr>
   
   <tr>
-    <td colspan="6"><img src="https://github.com/user-attachments/assets/35304d89-f164-4e93-8987-9e7b37cad49d" alt="Wlogout Menu" width="100%"/></td>
+    <td colspan="6"><img src="https://github.com/user-attachments/assets/83d07be0-cdea-468b-8759-9998b8f11219" alt="Wlogout Menu" width="100%"/></td>
   </tr>
 </table>
 
