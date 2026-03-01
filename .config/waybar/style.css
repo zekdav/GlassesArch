@@ -97,6 +97,10 @@ window#waybar {
     transition: all 0.5s ease;
 }
 
+#bluetooth:hover {
+    background-color: alpha(@foreground, 0.3);
+}
+
 #bluetooth.connected {
     font-weight: bolder;
     font-size: 15px;
@@ -123,6 +127,10 @@ window#waybar {
     margin-right: 25px;
     padding: 4px 14px;
     transition: all 0.3s ease;
+}
+
+#clock:hover {
+    background-color: alpha(@foreground, 0.3);
 }
 
 #clock label {
@@ -153,6 +161,10 @@ window#waybar {
     color: @foreground;
     font-weight: bold;
     transition: all 0.3s ease;
+}
+
+#network:hover {
+    background-color: alpha(@foreground, 0.3);
 }
 
 #network.disabled {
@@ -186,6 +198,10 @@ window#waybar {
     transition: all 0.3s ease;
 }
 
+#pulseaudio:hover {
+    background-color: alpha(@foreground, 0.3);
+}
+
 #pulseaudio.muted {
     background: alpha(@color1, 0.6);
     animation: none;
@@ -203,10 +219,6 @@ window#waybar {
     font-size: 15px;
     padding: 4px 14px;
     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-
-#temperature:hover {
-    background-color: alpha(@foreground, 0.3);
 }
 
 #temperature.critical {
