@@ -29,7 +29,7 @@
         "max-length": 25
     },
     "temperature": {
-        "critical-threshold": 75,
+        "critical-threshold": 80,
         "format-critical": "{temperatureC} °C ",
         "format": "{temperatureC} °C"
     },

@@ -1,7 +1,7 @@
 @import "colors.css";
 
 * {
-    font-family: FiraCode, "Noto Sans", FontAwesome, Roboto, Helvetica, Arial, sans-serif;
+    font-family: Cantarell, Inter, SF Pro Display;
 }
 
 window#waybar {
@@ -16,7 +16,7 @@ window#waybar {
 #network,
 #pulseaudio,
 #bluetooth {
-    padding: 0 10px;
+    padding: 4px 14px;
     border-radius: 15px;
     background-color: alpha(@foreground, 0.2);
     margin: 10px 10px 10px 0;
@@ -32,28 +32,31 @@ window#waybar {
     background-color: alpha(@foreground, 0.2);
     border-radius: 15px;
     margin-right: 10px;
-    padding: 4px 10px 2px 10px;
+    padding: 4px 14px;
     font-weight: bolder;
     font-size: 15px;
     color: @foreground;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 #workspaces button:hover {
     background-color: alpha(@foreground, 0.4);
+    box-shadow: rgba(0, 0, 0, 0.2) 2px 2px 8px 2px;
 }
 
 #workspaces button.active {
-    padding: 4px 20px 3px 20px;
-    background: linear-gradient(45deg, @color1, @color2);
+    padding: 4px 14px;
+    background: linear-gradient(45deg, @color1, @color2, @color5);
     background-size: 300% 300%;
-    box-shadow: rgba(0, 0, 0, 0.2) 2px 2px 5px 2px;
     color: @background;
     border: none;
+    animation: gradient 6s ease infinite;
 }
 
 #workspaces button label {
     color: @foreground;
     font-weight: bolder;
+    transition: color 0.3s ease;
 }
 
 #workspaces button.active label {
@@ -73,11 +76,24 @@ window#waybar {
     }
 }
 
+@keyframes warning-pulse {
+    0% { background-color: rgba(239, 83, 80, 0.6); box-shadow: 0 0 5px rgba(239, 83, 80, 0.2); }
+    50% { background-color: rgba(211, 47, 47, 0.9); box-shadow: 0 0 12px rgba(211, 47, 47, 0.6); }
+    100% { background-color: rgba(239, 83, 80, 0.6); box-shadow: 0 0 5px rgba(239, 83, 80, 0.2); }
+}
+
+@keyframes temp-normal-breathe {
+    0% { box-shadow: 0 0 2px rgba(160, 185, 165, 0.1); }
+    50% { box-shadow: 0 0 8px rgba(160, 185, 165, 0.4); }
+    100% { box-shadow: 0 0 2px rgba(160, 185, 165, 0.1); }
+}
+
 #bluetooth {
     color: black;
+    font-weight: bolder;
     animation: gradient 10s ease infinite;
     font-size: 15px;
-    padding: 4px 10px 2px 10px;
+    padding: 4px 14px;
     transition: all 0.5s ease;
 }
 
@@ -94,19 +110,19 @@ window#waybar {
 }
 
 #clock {
-    background: linear-gradient(90deg,
+    background: linear-gradient(135deg,
             alpha(@foreground, 0.2) 0%,
-            alpha(@color5, 0.9) 50%,
-            alpha(@color1, 0.9) 80%,
+            alpha(@color5, 0.7) 40%,
+            alpha(@color1, 0.7) 60%,
             alpha(@foreground, 0.2) 100%);
-    background-size: 400% 400%;
-    animation: gradient 10s ease infinite;
+    background-size: 300% 300%;
+    animation: gradient 8s ease infinite;
     color: @foreground;
-    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
     font-size: 15px;
     font-weight: bolder;
     margin-right: 25px;
-    padding: 0 15px;
+    padding: 4px 14px;
+    transition: all 0.3s ease;
 }
 
 #clock label {
@@ -118,6 +134,7 @@ window#waybar {
     animation: gradient 10s ease infinite;
     font-size: 15px;
     font-weight: bolder;
+    transition: all 0.3s ease;
 }
 
 #battery.charging,
@@ -135,6 +152,7 @@ window#waybar {
 #network {
     color: @foreground;
     font-weight: bold;
+    transition: all 0.3s ease;
 }
 
 #network.disabled {
@@ -143,16 +161,15 @@ window#waybar {
 
 #network.disconnected {
     background: radial-gradient(circle, alpha(@color5, 0.9) 0%, alpha(@color1, 0.9) 100%);
-    padding: 3px 11px 0 10px;
+    padding: 4px 14px;
 }
 
 #network.linked,
 #network.wifi {
     animation: gradient 10s ease infinite;
     background-size: 400% 400%;
-    animation: gradient 10s ease infinite;
     font-weight: 900;
-    padding: 0 15px;
+    padding: 4px 14px;
 }
 
 #network.ethernet {
@@ -165,41 +182,39 @@ window#waybar {
     font-weight: bold;
     font-size: 15px;
     color: @foreground;
-    padding: 0 15px;
+    padding: 4px 14px;
+    transition: all 0.3s ease;
 }
 
 #pulseaudio.muted {
     background: alpha(@color1, 0.6);
     animation: none;
-    text-shadow: none;
 }
 
 #temperature {
-    background: linear-gradient(90deg,
-        alpha(@foreground, 0.2) 0%,
-        rgba(160, 185, 165, 0.5) 50%,
-        rgba(130, 155, 135, 0.6) 80%,
-        alpha(@foreground, 0.2) 100%);
-    background-size: 400% 400%;
-    animation: gradient 10s ease infinite;
+    background: linear-gradient(135deg,
+        alpha(@foreground, 0.1) 0%,
+        rgba(160, 185, 165, 0.3) 50%,
+        alpha(@foreground, 0.1) 100%);
+    background-size: 300% 300%;
+    animation: gradient 10s ease infinite, temp-normal-breathe 4s ease-in-out infinite;
     color: @foreground;
     font-weight: bold;
     font-size: 15px;
-    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-    padding: 0 15px;
+    padding: 4px 14px;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+#temperature:hover {
+    background-color: alpha(@foreground, 0.3);
 }
 
 #temperature.critical {
-    background: linear-gradient(90deg,
-        alpha(@foreground, 0.2) 0%,
-        rgba(239, 83, 80, 0.8) 50%,
-        rgba(211, 47, 47, 0.9) 80%,
-        alpha(@foreground, 0.2) 100%);
-    background-size: 400% 400%;
-    animation: gradient 10s ease infinite;
-    color: @foreground;
+    background: none;
+    background-color: transparent;
+    animation: warning-pulse 1.5s ease-in-out infinite;
+    color: white;
     font-weight: bold;
     font-size: 15px;
-    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-    padding: 0 15px;
+    padding: 4px 14px;
 }
