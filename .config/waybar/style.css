@@ -34,6 +34,7 @@ window#waybar {
     margin-right: 10px;
     padding: 4px 10px 2px 10px;
     font-weight: bolder;
+    font-size: 15px;
     color: @foreground;
 }
 
@@ -73,29 +74,22 @@ window#waybar {
 }
 
 #bluetooth {
-    color: #6E69FF;
+    color: black;
+    animation: gradient 10s ease infinite;
     font-size: 15px;
     padding: 4px 10px 2px 10px;
-    box-shadow: rgba(0, 0, 0, 0.1) 2px 2px 5px 2px;
     transition: all 0.5s ease;
 }
 
 #bluetooth.connected {
-    background: linear-gradient(90deg,
-            alpha(@foreground, 0.2) 0%,
-            alpha(@color5, 0.9) 50%,
-            alpha(@color1, 0.9) 80%,
-            alpha(@foreground, 0.2) 100%);
-    font-size: 14px;
+    font-weight: bolder;
+    font-size: 15px;
     background-size: 400% 400%;
     animation: gradient 10s ease infinite;
-    color: @foreground;
-    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 }
 
 #bluetooth.off {
     background-color: transparent;
-    color: @color8;
     box-shadow: none;
 }
 
@@ -120,15 +114,16 @@ window#waybar {
 }
 
 #battery {
-    color: @color2;
+    color: black;
+    animation: gradient 10s ease infinite;
     font-size: 15px;
     font-weight: bolder;
 }
 
 #battery.charging,
 #battery.plugged {
-    color: @color6;
-    background-color: alpha(@background, 0.7);
+    color: black;
+    animation: gradient 10s ease infinite;
 }
 
 #battery.critical:not(.charging) {
@@ -153,7 +148,7 @@ window#waybar {
 
 #network.linked,
 #network.wifi {
-    background-color: alpha(@background, 0.7);
+    animation: gradient 10s ease infinite;
     background-size: 400% 400%;
     animation: gradient 10s ease infinite;
     font-weight: 900;
@@ -168,7 +163,7 @@ window#waybar {
     background-size: 400% 400%;
     animation: gradient 10s ease infinite;
     font-weight: bold;
-    font-size: 14px;
+    font-size: 15px;
     color: @foreground;
     padding: 0 15px;
 }
@@ -189,6 +184,7 @@ window#waybar {
     animation: gradient 10s ease infinite;
     color: @foreground;
     font-weight: bold;
+    font-size: 15px;
     text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
     padding: 0 15px;
 }
@@ -203,6 +199,7 @@ window#waybar {
     animation: gradient 10s ease infinite;
     color: @foreground;
     font-weight: bold;
+    font-size: 15px;
     text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
     padding: 0 15px;
 }

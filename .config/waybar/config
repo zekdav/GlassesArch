@@ -30,8 +30,8 @@
     },
     "temperature": {
         "critical-threshold": 75,
-        "format-critical": "{temperatureC}°C ",
-        "format": "{temperatureC}°C"
+        "format-critical": "{temperatureC} °C ",
+        "format": "{temperatureC} °C"
     },
     "battery": {
         "states": {
@@ -55,8 +55,8 @@
     },
     "bluetooth": {
         "format": " {status}",
-        "format-connected": " {device_alias}",
-        "format-connected-battery": " {device_alias} {device_battery_percentage}%",
+        "format-connected": "{device_alias}",
+        "format-connected-battery": "{device_alias} {device_battery_percentage}%",
         "tooltip-format": "{controller_alias}\t{controller_address}\n\n{num_connections} connected",
         "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{num_connections} connected\n\n{device_enumerate}",
         "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
@@ -66,16 +66,10 @@
     "pulseaudio": {
         "scroll-step": 5,
         "format": "{icon}   {volume}%",
-        "format-bluetooth": "{icon} {volume}%",
+        "format-bluetooth": "{icon}   {volume}%",
         "format-bluetooth-muted": " {icon}",
         "format-muted": " Muted",
         "format-icons": {
-            "headphone": "",
-            "hands-free": "",
-            "headset": "",
-            "phone": "",
-            "portable": "",
-            "car": "",
             "default": ["", "", ""]
         },
         "on-click": "pavucontrol"

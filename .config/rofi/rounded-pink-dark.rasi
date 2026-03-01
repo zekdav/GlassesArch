@@ -15,7 +15,7 @@ window {
     border-radius: 24px;
     background-color: @bg-col;
     border: 2px;
-    border-color: @border-col;
+    border-color: @sel-bg;
 }
 
 mainbox {
@@ -24,7 +24,6 @@ mainbox {
 
 inputbar {
     background-color: transparent;
-    border: 0px;
     padding: 8px 16px;
     spacing: 8px;
     children: [ entry ];
