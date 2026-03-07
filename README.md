@@ -135,4 +135,4 @@ Contributions are always welcome! See `CONTRIBUTING.md` for ways to get started.
 ---
 
 ## 📄 License
-This project is licensed under the MIT License - see the `LICENSE` file for details.
+This project is licensed under the GPL-3.0 License - see the `LICENSE` file for details.
