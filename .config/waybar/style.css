@@ -18,7 +18,8 @@ window#waybar {
 #bluetooth {
     padding: 4px 14px;
     border-radius: 15px;
-    background-color: rgba(9, 9, 9, 0.2);
+    /*background-color: alpha(mix(@color1, #ffffff, 0.8), 0.2);*/
+    background-color: rgba(147, 144, 144, 0.2);
     margin: 10px 10px 10px 0;
 }
 
@@ -28,7 +29,7 @@ window#waybar {
 }
 
 #workspaces button {
-    background-color: rgba(9, 9, 9, 0.2);
+    background-color: rgba(147, 144, 144, 0.2);
     border-radius: 15px;
     margin-right: 10px;
     padding: 4px 14px;
