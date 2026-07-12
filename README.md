@@ -23,15 +23,9 @@ A beautifully customized, highly dynamic Hyprland setup for Arch Linux. Focused 
   </tr>
 </table>
 
-### Live Preview
-
-<div align="center">
-  <video src="https://github.com/user-attachments/assets/6aa2f99d-8b1a-4505-8bfd-b29d9618adcb" autoplay loop muted controls playsinline width="500"></video>
-</div>
-
 ---
 
-## Key Features
+### Key Features
 
 * **True Dynamic Theming (`Wallust`)**: System colors are automatically generated on the fly. The custom scripts extract colors not only from static images but also grab frames from **.mp4 / .webm** video wallpapers to keep the theme perfectly synced.
 * **Glassmorphism UI**: Waybar and Rofi feature a beautifully tuned, semi-transparent frosted glass effect that blends perfectly with bright and pastel wallpapers.
@@ -45,18 +39,7 @@ A beautifully customized, highly dynamic Hyprland setup for Arch Linux. Focused 
 
 ---
 
-## Components
-
-* **Window Manager:** [Hyprland](https://hyprland.org/)
-* **Bar:** [Waybar](https://github.com/Alexays/Waybar) (Custom Glassy CSS)
-* **Launcher:** [Rofi-Wayland](https://github.com/lbonn/rofi)
-* **Terminal:** [Kitty](https://sw.kovidgoyal.net/kitty/)
-* **Wallpaper Manager:** [Waypaper](https://github.com/anufrievroman/waypaper) (with `mpvpaper` and `swaybg`)
-* **Color Generator:** [Wallust](https://codeberg.org/explosion-mental/wallust) (using `kmeans` backend and `softlight` palette)
-
----
-
-## Keybinds
+### Keybinds
 
 The main modifier key is `SUPER`.
 
@@ -111,7 +94,7 @@ The main modifier key is `SUPER`.
 
 ---
 
-## Installation
+### Installation
 
 1. Clone this repository to your home folder.
 2. Ensure you have the required dependencies installed via `pacman` or `yay`:
