@@ -75,7 +75,7 @@ Rectangle {
   Connections {
     target: sddm
 
-    onLoginSucceeded: {
+    function onLoginSucceeded() {
       prompt_bg.color = successText
       prompt_txt.text = textConstants.loginSucceeded
 
@@ -84,7 +84,7 @@ Rectangle {
 
       anim_success.start()
     }
-    onLoginFailed: {
+    function onLoginFailed() {
       prompt_bg.color = failureText
       prompt_txt.text = textConstants.loginFailed
 
@@ -93,7 +93,7 @@ Rectangle {
 
       anim_failure.start()
     }
-    onInformationMessage: {
+    function onInformationMessage(message) {
       prompt_bg.color = failureText
       prompt_txt.text = message
 
@@ -239,6 +239,8 @@ Rectangle {
         width   : spUnit * 2
         height  : parent.height
 
+        visible : keyboard.enabled && keyboard.layouts.length > 0
+
         color       : primaryHue1
         borderColor : primaryHue3
         focusColor  : accentLight
@@ -249,7 +251,7 @@ Rectangle {
         font.family     : opensans_cond_light.name
         font.pixelSize  : spFontNormal
 
-        arrowIcon: "images/ic_arrow_drop_down_white_24px.svg"
+        arrowIcon: Qt.resolvedUrl("images/ic_arrow_drop_down_white_24px.svg")
         arrowColor: primaryHue3
 
         KeyNavigation.tab     : maya_username
@@ -260,6 +262,8 @@ Rectangle {
         height  : parent.height
 
         text    : textConstants.layout
+
+        visible : maya_layout.visible
 
         color   : normalText
 
@@ -292,7 +296,7 @@ Rectangle {
         font.family     : opensans_cond_light.name
         font.pixelSize  : spFontNormal
 
-        arrowIcon: "images/ic_arrow_drop_down_white_24px.svg"
+        arrowIcon: Qt.resolvedUrl("images/ic_arrow_drop_down_white_24px.svg")
         arrowColor: primaryHue3
 
         KeyNavigation.tab     : maya_layout
@@ -351,7 +355,7 @@ Rectangle {
         label       : textConstants.shutdown
         labelColor  : normalText
 
-        icon        : "images/ic_power_settings_new_white_24px.svg"
+        icon        : Qt.resolvedUrl("images/ic_power_settings_new_white_24px.svg")
         iconColor   : accentShade
 
         hoverIconColor  : powerColor
@@ -377,7 +381,7 @@ Rectangle {
         label       : textConstants.reboot
         labelColor  : normalText
 
-        icon        : "images/ic_refresh_white_24px.svg"
+        icon        : Qt.resolvedUrl("images/ic_refresh_white_24px.svg")
         iconColor   : accentLight
 
         hoverIconColor  : rebootColor
@@ -488,7 +492,7 @@ Rectangle {
         hoverColor  : accentLight
         textColor   : normalText
 
-        image       : "images/ic_warning_white_24px.svg"
+        image       : Qt.resolvedUrl("images/ic_warning_white_24px.svg")
 
         tooltipEnabled  : true
         tooltipText     : textConstants.capslockWarning
@@ -501,7 +505,7 @@ Rectangle {
         KeyNavigation.tab     : maya_login
         KeyNavigation.backtab : maya_username
 
-        Keys.onPressed: {
+        Keys.onPressed: function (event) {
           if ((event.key === Qt.Key_Return) || (event.key === Qt.Key_Enter)) {
             maya_root.tryLogin()
 
@@ -542,7 +546,7 @@ Rectangle {
 
         onClicked: maya_root.tryLogin()
 
-        Keys.onPressed: {
+        Keys.onPressed: function (event) {
           if ((event.key === Qt.Key_Return) || (event.key === Qt.Key_Enter)) {
             maya_root.tryLogin()
 

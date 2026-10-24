@@ -40,17 +40,16 @@ Rectangle {
     Connections {
         target: sddm
 
-        onLoginSucceeded: {
+        function onLoginSucceeded() {
             errorMessage.color = "steelblue"
             errorMessage.text = textConstants.loginSucceeded
         }
-
-        onLoginFailed: {
+        function onLoginFailed() {
             password.text = ""
             errorMessage.color = "red"
             errorMessage.text = textConstants.loginFailed
         }
-        onInformationMessage: {
+        function onInformationMessage(message) {
             errorMessage.color = "red"
             errorMessage.text = message
         }
@@ -58,11 +57,12 @@ Rectangle {
 
     Background {
         anchors.fill: parent
-        source: config.background
+        source: Qt.resolvedUrl(config.background)
         fillMode: Image.PreserveAspectCrop
         onStatusChanged: {
-            if (status == Image.Error && source != config.defaultBackground) {
-                source = config.defaultBackground
+            var defaultBackground = Qt.resolvedUrl(config.defaultBackground)
+            if (status == Image.Error && source != defaultBackground) {
+                source = defaultBackground
             }
         }
     }
@@ -87,7 +87,7 @@ Rectangle {
             width: Math.max(320, mainColumn.implicitWidth + 50)
             height: Math.max(320, mainColumn.implicitHeight + 50)
 
-            source: "rectangle.png"
+            source: Qt.resolvedUrl("rectangle.png")
 
             Column {
                 id: mainColumn
@@ -125,7 +125,7 @@ Rectangle {
 
                         KeyNavigation.backtab: rebootButton; KeyNavigation.tab: password
 
-                        Keys.onPressed: {
+                        Keys.onPressed: function (event) {
                             if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
                                 sddm.login(name.text, password.text, sessionIndex)
                                 event.accepted = true
@@ -152,7 +152,7 @@ Rectangle {
 
                         KeyNavigation.backtab: name; KeyNavigation.tab: session
 
-                        Keys.onPressed: {
+                        Keys.onPressed: function (event) {
                             if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
                                 sddm.login(name.text, password.text, sessionIndex)
                                 event.accepted = true
@@ -186,7 +186,7 @@ Rectangle {
                             width: parent.width; height: 30
                             font.pixelSize: 14
 
-                            arrowIcon: "angle-down.png"
+                            arrowIcon: Qt.resolvedUrl("angle-down.png")
 
                             model: sessionModel
                             index: sessionModel.lastIndex
@@ -200,6 +200,8 @@ Rectangle {
                         width: parent.width * 0.7
                         spacing : 4
                         anchors.bottom: parent.bottom
+
+                        visible: keyboard.enabled && keyboard.layouts.length > 0
 
                         Text {
                             id: lblLayout
@@ -215,7 +217,7 @@ Rectangle {
                             width: parent.width; height: 30
                             font.pixelSize: 14
 
-                            arrowIcon: "angle-down.png"
+                            arrowIcon: Qt.resolvedUrl("angle-down.png")
 
                             KeyNavigation.backtab: session; KeyNavigation.tab: loginButton
                         }
