@@ -1,0 +1,44 @@
+#!/usr/bin/bash
+
+TEMP=/tmp/current_wall
+HYPR_DIR="$HOME/hypr"
+SCRIPTS_DIR="$HYPR_DIR/scripts"
+FILES=("$HYPR_DIR/wallpapers"/*)
+COOLDOWN=0.1
+
+while true; do
+    case "$1" in
+        "cycle")
+            index=$(cat "$TEMP")
+            index=$((index + 1))
+            if [ "$index" -ge "${#FILES[@]}" ]; then
+                index=0
+            fi
+            echo "$index" > "$TEMP"
+            "$SCRIPTS_DIR/wall" "${FILES[$index]}"
+            exit 0
+            ;;
+        "arrow-icon")
+            if "$SCRIPTS_DIR/toolbar_state"; then
+                echo ""
+            else
+                echo ""
+            fi
+            ;;
+        "ss-icon")
+            if "$SCRIPTS_DIR/toolbar_state"; then
+                echo ""
+            else
+                echo ""
+            fi
+            ;;
+        *)
+            if "$SCRIPTS_DIR/toolbar_state"; then
+                echo "     "
+            else
+                echo ""
+            fi
+            ;;
+    esac
+    sleep "$COOLDOWN"
+done

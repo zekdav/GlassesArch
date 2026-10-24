@@ -1,0 +1,456 @@
+#!/usr/bin/env python3
+"""
+Dynamic Pill & Audio Controller for Waybar / Hyprland
+- Monitors MPRIS media playback (via waybar-mpris and playerctl)
+- Watches desktop notifications (via dunst / swaync store)
+- Smooth marquee / scrolling text engine for long titles
+- Interactive CLI commands for mouse clicks and volume scrolling
+- Dynamic player & status icons with rich tooltips
+- Thread-safe, atomic file writes with low CPU footprint
+"""
+
+import sys
+import os
+import subprocess
+import json
+import pickle
+import time
+import threading
+import signal
+import argparse
+from pathlib import Path
+
+# Paths
+STORE_DIR = Path.home() / "hypr" / "store"
+OUT_FILE = STORE_DIR / "dynamic_out.txt"
+NOTIF_FILE = STORE_DIR / "latest_notif"
+
+# Configuration
+MAX_TEXT_LEN = 26        # Maximum visible characters for marquee window
+SCROLL_INTERVAL = 0.35    # Seconds per scrolling tick
+START_PAUSE_TICKS = 4     # Number of ticks to pause at the start of a title
+LOOP_PAUSE_TICKS = 4      # Number of ticks to pause after a full marquee loop
+SEPARATOR = "   •   "     # Delimiter when looping long titles
+NOTIF_DURATION = 4.0      # Seconds to display a notification before restoring media
+
+
+def get_volume_info():
+    """Returns (volume_percent: int, is_muted: bool)."""
+    try:
+        res = subprocess.run(
+            ["wpctl", "get-volume", "@DEFAULT_AUDIO_SINK@"],
+            capture_output=True,
+            text=True,
+            timeout=1
+        )
+        if res.returncode == 0:
+            parts = res.stdout.strip().split()
+            if len(parts) >= 2:
+                vol = int(round(float(parts[1]) * 100))
+                is_muted = "[MUTED]" in res.stdout
+                return vol, is_muted
+    except Exception:
+        pass
+
+    try:
+        res = subprocess.run(
+            ["pactl", "get-sink-volume", "@DEFAULT_SINK@"],
+            capture_output=True,
+            text=True,
+            timeout=1
+        )
+        if res.returncode == 0:
+            import re
+            m = re.search(r"(\d+)%", res.stdout)
+            if m:
+                vol = int(m.group(1))
+                mute_res = subprocess.run(
+                    ["pactl", "get-sink-mute", "@DEFAULT_SINK@"],
+                    capture_output=True,
+                    text=True,
+                    timeout=1
+                )
+                is_muted = "yes" in mute_res.stdout.lower()
+                return vol, is_muted
+    except Exception:
+        pass
+
+    return 100, False
+
+
+def execute_action(action: str):
+    """Executes media / volume actions invoked from Waybar clicks or keybinds."""
+    if action == "toggle":
+        subprocess.run(["playerctl", "play-pause"], stderr=subprocess.DEVNULL)
+    elif action == "next":
+        subprocess.run(["playerctl", "next"], stderr=subprocess.DEVNULL)
+    elif action == "prev":
+        subprocess.run(["playerctl", "previous"], stderr=subprocess.DEVNULL)
+    elif action == "vol-up":
+        subprocess.run(
+            ["wpctl", "set-volume", "-l", "1.0", "@DEFAULT_AUDIO_SINK@", "5%+"],
+            stderr=subprocess.DEVNULL
+        )
+    elif action == "vol-down":
+        subprocess.run(
+            ["wpctl", "set-volume", "-l", "1.0", "@DEFAULT_AUDIO_SINK@", "5%-"],
+            stderr=subprocess.DEVNULL
+        )
+    elif action == "mute":
+        subprocess.run(
+            ["wpctl", "set-mute", "@DEFAULT_AUDIO_SINK@", "toggle"],
+            stderr=subprocess.DEVNULL
+        )
+
+
+class Marquee:
+    """Handles smooth text scrolling with pause at start and end of loop."""
+    def __init__(self, max_length=MAX_TEXT_LEN, start_pause=START_PAUSE_TICKS, loop_pause=LOOP_PAUSE_TICKS):
+        self.max_length = max_length
+        self.start_pause = start_pause
+        self.loop_pause = loop_pause
+        self.current_text = ""
+        self.index = 0
+        self.pause_counter = start_pause
+
+    def reset(self, text=""):
+        self.current_text = text
+        self.index = 0
+        self.pause_counter = self.start_pause
+
+    def get_frame(self, text: str, is_paused: bool = False) -> str:
+        text = text.strip()
+        if not text:
+            return ""
+
+        if text != self.current_text:
+            self.reset(text)
+
+        if len(text) <= self.max_length:
+            return text
+
+        # When media is paused, freeze scrolling on the beginning for readability
+        if is_paused:
+            return text[:self.max_length]
+
+        if self.pause_counter > 0:
+            self.pause_counter -= 1
+            return text[:self.max_length]
+
+        loop_str = text + SEPARATOR
+        double_str = loop_str + loop_str
+        frame = double_str[self.index : self.index + self.max_length]
+        self.index = (self.index + 1) % len(loop_str)
+
+        if self.index == 0:
+            self.pause_counter = self.loop_pause
+
+        return frame
+
+
+class DynamicDaemon:
+    def __init__(self):
+        STORE_DIR.mkdir(parents=True, exist_ok=True)
+        self.lock = threading.Lock()
+        self.running = True
+
+        # Marquee instance
+        self.marquee = Marquee()
+
+        # Media state
+        self.media_raw_text = ""
+        self.media_clean_text = ""
+        self.media_class = "none"
+        self.media_tooltip = ""
+        self.media_alt = ""
+
+        # Notification state
+        self.last_notif_fingerprint = None
+        self.notif_active = False
+        self.notif_text = ""
+        self.notif_class = "none"
+        self.notif_tooltip = ""
+        self.notif_expiry = 0.0
+
+        # Subprocess
+        self.mpris_proc = None
+
+    def atomic_write(self, payload: dict):
+        """Safely writes valid JSON to dynamic_out.txt using atomic file swap."""
+        tmp_file = OUT_FILE.with_suffix(".tmp")
+        try:
+            with open(tmp_file, "w", encoding="utf-8") as f:
+                json.dump(payload, f, ensure_ascii=False)
+                f.write("\n")
+            tmp_file.replace(OUT_FILE)
+        except Exception:
+            pass
+
+    def get_player_icon(self, player_name: str, status: str) -> str:
+        p = player_name.lower()
+        if "spotify" in p:
+            return ""
+        elif "firefox" in p:
+            return ""
+        elif "chromium" in p or "chrome" in p:
+            return ""
+
+        if status == "playing":
+            return ""
+        elif status == "paused":
+            return ""
+        return ""
+
+    def parse_mpris_line(self, line: str):
+        """Parses JSON line from waybar-mpris."""
+        if not line or not line.strip():
+            return
+
+        try:
+            data = json.loads(line)
+        except json.JSONDecodeError:
+            return
+
+        raw_text = data.get("text", "")
+        # Clean control characters / symbols from raw string
+        clean_text = (
+            raw_text
+            .replace(" ", "")
+            .replace("", "")
+            .replace("▶ ", "")
+            .replace("▶", "")
+            .replace("⏸ ", "")
+            .replace("⏸", "")
+            .strip()
+        )
+
+        status_class = data.get("class", "none")
+        alt = data.get("alt", "")
+        tooltip_orig = data.get("tooltip", "")
+
+        # Extract duration / position if present at the end so title remains stable
+        import re
+        pos_match = re.search(r"\s*\(\d+:\d+(?:/\d+:\d+)?\)$", clean_text)
+        duration_str = ""
+        track_title = clean_text
+        if pos_match:
+            duration_str = pos_match.group(0).strip(" ()")
+            track_title = clean_text[:pos_match.start()].strip()
+
+        # Extract extra info for tooltip if possible
+        vol, is_muted = get_volume_info()
+        vol_str = f"{vol}% (Muted)" if is_muted else f"{vol}%"
+
+        icon = self.get_player_icon(alt, status_class)
+        tooltip_lines = []
+        if track_title:
+            tooltip_lines.append(f"{icon} {track_title}")
+        if duration_str:
+            tooltip_lines.append(f" Время: {duration_str}")
+        if alt:
+            tooltip_lines.append(f" Плеер: {alt.capitalize()}")
+        tooltip_lines.append(f" Громкость: {vol_str}")
+        tooltip_lines.append("")
+        tooltip_lines.append(" ЛКМ: Воспроизведение / Пауза")
+        tooltip_lines.append(" ПКМ: Следующий трек")
+        tooltip_lines.append(" СКМ: Предыдущий трек")
+        tooltip_lines.append(" Скролл: Громкость")
+
+        formatted_tooltip = "\n".join(tooltip_lines)
+
+        with self.lock:
+            self.media_raw_text = raw_text
+            self.media_clean_text = track_title
+            self.media_class = status_class
+            self.media_alt = alt
+            self.media_tooltip = formatted_tooltip
+
+    def mpris_worker(self):
+        """Spawns waybar-mpris and reads lines continuously."""
+        while self.running:
+            try:
+                self.mpris_proc = subprocess.Popen(
+                    ["waybar-mpris", "--position", "--autofocus"],
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.DEVNULL,
+                    text=True,
+                    bufsize=1
+                )
+
+                for line in iter(self.mpris_proc.stdout.readline, ""):
+                    if not self.running:
+                        break
+                    self.parse_mpris_line(line)
+
+            except Exception:
+                time.sleep(2)
+            finally:
+                if self.mpris_proc:
+                    try:
+                        self.mpris_proc.terminate()
+                    except Exception:
+                        pass
+            time.sleep(1)
+
+    def notif_worker(self):
+        """Monitors latest_notif file for incoming desktop notifications."""
+        while self.running:
+            try:
+                if NOTIF_FILE.exists():
+                    with open(NOTIF_FILE, "rb") as f:
+                        notif = pickle.load(f)
+
+                    fingerprint = (
+                        notif.get("id"),
+                        notif.get("timestamp"),
+                        notif.get("summary"),
+                        notif.get("body")
+                    )
+
+                    if fingerprint != self.last_notif_fingerprint and any(fingerprint):
+                        self.last_notif_fingerprint = fingerprint
+                        urgency_raw = str(notif.get("urgency", "low")).upper()
+
+                        if urgency_raw == "CRITICAL":
+                            urgency_class = "critical"
+                            icon = ""
+                        elif urgency_raw == "NORMAL":
+                            urgency_class = "normal"
+                            icon = ""
+                        else:
+                            urgency_class = "low"
+                            icon = ""
+
+                        app_name = notif.get("app_name") or "Уведомление"
+                        summary = notif.get("summary") or ""
+                        body = notif.get("body") or ""
+
+                        display_text = f"[{app_name}] {summary}".strip()
+                        tooltip_text = (
+                            f"{icon} {app_name}\n"
+                            f"Тема: {summary}\n"
+                            f"{body}\n"
+                            f"Важность: {urgency_class.capitalize()}"
+                        )
+
+                        with self.lock:
+                            self.notif_active = True
+                            self.notif_class = urgency_class
+                            self.notif_text = display_text
+                            self.notif_tooltip = tooltip_text
+                            self.notif_expiry = time.time() + NOTIF_DURATION
+
+            except Exception:
+                pass
+
+            time.sleep(0.4)
+
+    def ticker_worker(self):
+        """Main rendering loop: calculates scrolling frame and outputs JSON."""
+        while self.running:
+            now = time.time()
+            output_doc = {"text": "", "class": "none", "tooltip": ""}
+
+            with self.lock:
+                # 1. Notification has highest visual priority
+                if self.notif_active:
+                    if now < self.notif_expiry:
+                        notif_frame = self.marquee.get_frame(self.notif_text)
+                        icon = " " if self.notif_class == "critical" else " "
+                        output_doc = {
+                            "text": f"{icon}{notif_frame}",
+                            "class": self.notif_class,
+                            "tooltip": self.notif_tooltip
+                        }
+                    else:
+                        # Expiry elapsed: reset notification, resume media immediately
+                        self.notif_active = False
+                        self.marquee.reset(self.media_clean_text)
+
+                # 2. Media rendering (if no active notification)
+                if not self.notif_active:
+                    if self.media_clean_text and self.media_class in ("playing", "paused"):
+                        is_paused = (self.media_class == "paused")
+                        icon = self.get_player_icon(self.media_alt, self.media_class) + " "
+                        scroll_frame = self.marquee.get_frame(self.media_clean_text, is_paused=is_paused)
+                        output_doc = {
+                            "text": f"{icon}{scroll_frame}",
+                            "class": self.media_class,
+                            "tooltip": self.media_tooltip,
+                            "alt": self.media_alt
+                        }
+                    else:
+                        output_doc = {"text": "", "class": "none", "tooltip": ""}
+
+            self.atomic_write(output_doc)
+            time.sleep(SCROLL_INTERVAL)
+
+    def start(self):
+        """Starts background threads and handles graceful shutdown."""
+        def handle_signal(sig, frame):
+            self.running = False
+            if self.mpris_proc:
+                try:
+                    self.mpris_proc.terminate()
+                except Exception:
+                    pass
+            self.atomic_write({"text": "", "class": "none", "tooltip": ""})
+            sys.exit(0)
+
+        signal.signal(signal.SIGINT, handle_signal)
+        signal.signal(signal.SIGTERM, handle_signal)
+
+        # Clear output on start
+        self.atomic_write({"text": "", "class": "none", "tooltip": ""})
+
+        t_mpris = threading.Thread(target=self.mpris_worker, daemon=True)
+        t_notif = threading.Thread(target=self.notif_worker, daemon=True)
+        t_ticker = threading.Thread(target=self.ticker_worker, daemon=True)
+
+        t_mpris.start()
+        t_notif.start()
+        t_ticker.start()
+
+        # Keep main thread alive
+        while self.running:
+            time.sleep(1)
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Dynamic Waybar Audio & Pill Manager")
+    parser.add_argument("--toggle", action="store_true", help="Toggle play/pause")
+    parser.add_argument("--next", action="store_true", help="Next track")
+    parser.add_argument("--prev", action="store_true", help="Previous track")
+    parser.add_argument("--volume-up", "--vol-up", action="store_true", dest="vol_up", help="Volume up 5%%")
+    parser.add_argument("--volume-down", "--vol-down", action="store_true", dest="vol_down", help="Volume down 5%%")
+    parser.add_argument("--mute", action="store_true", help="Toggle sink mute")
+
+    args = parser.parse_args()
+
+    # CLI Action mode
+    if args.toggle:
+        execute_action("toggle")
+        return
+    if args.next:
+        execute_action("next")
+        return
+    if args.prev:
+        execute_action("prev")
+        return
+    if args.vol_up:
+        execute_action("vol-up")
+        return
+    if args.vol_down:
+        execute_action("vol-down")
+        return
+    if args.mute:
+        execute_action("mute")
+        return
+
+    # Daemon mode
+    daemon = DynamicDaemon()
+    daemon.start()
+
+
+if __name__ == "__main__":
+    main()

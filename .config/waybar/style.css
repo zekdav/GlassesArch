@@ -1,16 +1,15 @@
 @import "colors.css";
 
 * {
-    font-family: Cantarell, Inter, 'SF Pro Display';
-    border: none;
-    box-shadow: none; /* Глобально отключаем любые тени */
-    min-height: 0;
+  font-family: Cantarell, Inter, 'SF Pro Display';
+  border: none;
+  min-height: 0;
 }
 
 window#waybar {
-    background-color: transparent;
-    border-bottom: none;
-    box-shadow: none;
+  background-color: transparent;
+  border-bottom: none;
+  box-shadow: none;
 }
 
 #clock,
@@ -19,188 +18,287 @@ window#waybar {
 #network,
 #pulseaudio,
 #bluetooth {
-    font-weight: bold; /* Твой bold сохранен */
-    padding: 4px 14px;
-    border-radius: 15px;
-    background-color: rgba(255, 255, 255, 0.1); /* Светлая прозрачность для видимости */
-    color: @background; /* Меняем цвет шрифта на светлый */
-    border: 1px solid rgba(255, 255, 255, 0.15); 
-    margin: 10px 10px 10px 0;
-    font-size: 15px;
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  font-weight: bold;
+  padding: 4px 14px;
+  border-radius: 15px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: @background;
+  margin: 10px 10px 10px 0;
+  font-size: 15px;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 2);
+}
+
+#clock:hover,
+#battery:hover,
+#temperature:hover,
+#network:hover,
+#pulseaudio:hover,
+#bluetooth:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+#custom-dynamic_pill {
+  min-width: 210px;
+  margin: 10px 0;
+  padding: 4px 14px;
+  border-radius: 15px;
+  border: none;
+  box-shadow: none;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: @background;
+  font-family: "JetBrainsMono Nerd Font", monospace;
+  font-size: 15px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+#custom-dynamic_pill:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+#custom-dynamic_pill.idle {
+  min-width: 210px;
+  margin: 10px 10px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: @background;
+}
+
+#custom-dynamic_pill.playing,
+#custom-dynamic_pill.paused,
+#custom-dynamic_pill.volume,
+#custom-dynamic_pill.volume-hud,
+#custom-dynamic_pill.volume-muted,
+#custom-dynamic_pill.expanded {
+  min-width: 340px;
+  margin: 10px 15px 10px 10px;
+}
+
+#custom-dynamic_pill.playing {
+  background: linear-gradient(45deg, @color1, @color2, @color5);
+  background-size: 300% 300%;
+  color: #ffffff;
+  border: none;
+  border-radius: 15px;
+  animation: gradient 6s ease infinite;
+}
+
+#custom-dynamic_pill.paused {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 15px;
+  color: @background;
+}
+
+#custom-dynamic_pill.volume,
+#custom-dynamic_pill.volume-hud {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 15px;
+  color: @background;
+}
+
+#custom-dynamic_pill.volume-muted {
+  background-color: alpha(@color1, 0.6);
+  border: none;
+  border-radius: 15px;
+  color: #ffffff;
+}
+
+#custom-dynamic_pill.normal,
+#custom-dynamic_pill.low,
+#custom-dynamic_pill.critical,
+#custom-dynamic_pill.notif-normal,
+#custom-dynamic_pill.notif-low,
+#custom-dynamic_pill.notif-critical,
+#custom-dynamic_pill.notif-telegram,
+#custom-dynamic_pill.notif-discord,
+#custom-dynamic_pill.notif-spotify,
+#custom-dynamic_pill.notif-browser,
+#custom-dynamic_pill.notif-terminal,
+#custom-dynamic_pill.notif-screenshot,
+#custom-dynamic_pill.notif-wallpaper,
+#custom-dynamic_pill.notif-bluetooth,
+#custom-dynamic_pill.notif-battery,
+#custom-dynamic_pill.notif-system {
+  min-width: 360px;
+  margin: 10px 10px;
+  padding: 4px 14px;
+  border-radius: 15px;
+  background: linear-gradient(45deg, @color1, @color2);
+  background-size: 300% 300%;
+  color: #ffffff;
+  animation: gradient 6s ease infinite;
+}
+
+#custom-dynamic_pill.critical,
+#custom-dynamic_pill.notif-critical {
+  background-color: @color3;
+  color: #ffffff;
+  border: none;
+  border-radius: 15px;
+  animation: warning-pulse 1.5s ease-in-out infinite;
 }
 
 #workspaces {
-    background-color: transparent;
-    margin: 10px 10px 10px 25px;
+  background-color: transparent;
+  margin: 10px 10px 10px 25px;
 }
 
 #workspaces button {
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 15px;
-    margin-right: 10px;
-    padding: 4px 14px;
-    font-weight: bold; /* Твой bold сохранен */
-    font-size: 15px;
-    color: @background; /* Светлый текст */
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 15px;
+  margin-right: 12px;
+  padding: 4px 14px;
+  font-weight: bold;
+  font-size: 15px;
+  color: @background;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 #workspaces button:hover {
-    background-color: rgba(255, 255, 255, 0.25);
+  background-color: rgba(255, 255, 255, 0.25);
 }
 
 #workspaces button.active {
-    padding: 4px 14px;
-    background: linear-gradient(45deg, @color1, @color2, @color5);
-    background-size: 300% 300%;
-    color: #FFFFFF;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 15px;
-    animation: gradient 6s ease infinite;
+  border-radius: 15px;
+  padding: 4px 14px;
+  background: linear-gradient(45deg, @color1, @color2, @color5);
+  background-size: 300% 300%;
+  color: #ffffff;
+  animation: gradient 6s ease infinite;
 }
 
 #workspaces button label {
-    color: @background; /* Светлый текст */
-    font-weight: bold;
-    transition: color 0.3s ease;
+  color: @background;
+  font-weight: bold;
+  transition: color 0.3s ease;
 }
 
 #workspaces button.active label {
-    color: #FFFFFF;
+  color: #ffffff;
 }
 
 @keyframes gradient {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 @keyframes blink {
-    to {
-        background-color: @color3;
-        color: #FFFFFF;
-    }
+  to {
+    background-color: @color3;
+    color: #ffffff;
+  }
 }
 
-/* Анимация пульсации без теней */
 @keyframes warning-pulse {
-    0% { background-color: rgba(239, 83, 80, 0.4); }
-    50% { background-color: rgba(211, 47, 47, 0.7); }
-    100% { background-color: rgba(239, 83, 80, 0.4); }
+  0% { background-color: rgba(239, 83, 80, 0.4); }
+  50% { background-color: rgba(211, 47, 47, 0.7); }
+  100% { background-color: rgba(239, 83, 80, 0.4); }
 }
 
 #bluetooth {
-    font-weight: bold;
-    animation: gradient 10s ease infinite;
-    font-size: 15px;
-    transition: all 0.5s ease;
+  animation: gradient 10s ease infinite;
+  font-size: 15px;
+  transition: all 0.5s ease;
 }
 
 #bluetooth:hover {
-    background-color: rgba(255, 255, 255, 0.25);
+  background-color: rgba(255, 255, 255, 0.25);
 }
 
 #bluetooth.connected {
-    background-size: 400% 400%;
-    animation: gradient 10s ease infinite;
+  background-size: 300% 300%;
+  animation: gradient 10s ease infinite;
 }
 
 #bluetooth.off {
-    background-color: transparent;
-    border: none;
+  background-color: transparent;
+  border: none;
 }
 
 #clock {
-    background: linear-gradient(135deg,
-            rgba(255, 255, 255, 0.1) 0%,
-            rgba(255, 255, 255, 0.2) 40%,
-            rgba(255, 255, 255, 0.2) 60%,
-            rgba(255, 255, 255, 0.1) 100%);
-    background-size: 300% 300%;
-    animation: gradient 8s ease infinite;
-    margin-right: 25px;
-    transition: all 0.3s ease;
+  background-size: 300% 300%;
+  animation: gradient 8s ease infinite;
+  margin-right: 25px;
+  transition: all 0.3s ease;
 }
 
 #clock:hover {
-    background-color: rgba(255, 255, 255, 0.25);
+  background-color: rgba(255, 255, 255, 0.25);
 }
 
 #clock label {
-    color: @background;
+  color: @background;
 }
 
 #battery {
-    animation: gradient 10s ease infinite;
-    transition: all 0.3s ease;
+  animation: gradient 10s ease infinite;
+  transition: all 0.3s ease;
 }
 
 #battery.charging,
 #battery.plugged {
-    animation: gradient 10s ease infinite;
+  animation: gradient 10s ease infinite;
 }
 
 #battery.critical:not(.charging) {
-    background-color: alpha(@color1, 0.6);
-    animation: blink 0.5s infinite;
+  background-color: alpha(@color1, 0.6);
+  animation: blink 0.5s infinite;
 }
 
 #network {
-    transition: all 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 #network:hover {
-    background-color: rgba(255, 255, 255, 0.25);
+  background-color: rgba(255, 255, 255, 0.25);
 }
 
 #network.disabled {
-    background-color: @color8;
+  background-color: @color8;
 }
 
 #network.disconnected {
-    background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.05) 100%);
+  background: radial-gradient(circle,
+      rgba(255, 255, 255, 0.2) 0%,
+      rgba(255, 255, 255, 0.05) 100%);
 }
 
 #network.linked,
 #network.wifi {
-    animation: gradient 10s ease infinite;
-    background-size: 400% 400%;
+  animation: gradient 10s ease infinite;
+  background-size: 400% 400%;
 }
 
 #network.ethernet {
-    background-color: rgba(255, 255, 255, 0.15);
+  background-color: rgba(255, 255, 255, 0.15);
 }
 
 #pulseaudio {
-    background-size: 400% 400%;
-    animation: gradient 10s ease infinite;
-    transition: all 0.3s ease;
+  background-size: 400% 400%;
+  animation: gradient 10s ease infinite;
+  transition: all 0.3s ease;
 }
 
 #pulseaudio:hover {
-    background-color: rgba(255, 255, 255, 0.25);
+  background-color: rgba(255, 255, 255, 0.25);
 }
 
 #pulseaudio.muted {
-    background-color: alpha(@color1, 0.6);
-    animation: none;
+  background-color: alpha(@color1, 0.6);
+  animation: none;
 }
 
 #temperature {
-    background: linear-gradient(135deg,
-        rgba(255, 255, 255, 0.05) 0%,
-        rgba(255, 255, 255, 0.15) 50%,
-        rgba(255, 255, 255, 0.05) 100%);
-    background-size: 300% 300%;
-    animation: gradient 10s ease infinite;
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  background-size: 300% 300%;
+  animation: gradient 10s ease infinite;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 #temperature.critical {
-    background: none;
-    background-color: transparent;
-    animation: warning-pulse 1.5s ease-in-out infinite;
-    color: white;
+  background: none;
+  background-color: transparent;
+  animation: warning-pulse 1.5s ease-in-out infinite;
+  color: white;
 }

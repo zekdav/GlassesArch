@@ -1,0 +1,7 @@
+HYPR_DIR="$HOME/.config/hypr"
+TOOLS_DIR="$HYPR_DIR/scripts/tools"
+
+while true; do
+    python3 "$TOOLS_DIR/dynamic" --stream
+    sleep 0.5
+done

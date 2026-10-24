@@ -1,39 +1,48 @@
-@import "~/.config/rofi/colors.rasi"
+ @import "~/.config/rofi/colors.rasi"
 
 * {
-    font: "Inter 13";
+    font: "Cantarell bold 13";
     text-color: #1e1e2e;
     background-color: transparent;
     margin: 0px;
     padding: 0px;
     spacing: 0px;
+    highlight: none;
 }
+
 
 window {
     location: center;
-    width: 480;
+    width: 450;
     border-radius: 30px;
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.2);
     border: 2px;
-    border-color: @sel-bg;
+    border-color: @--col2;
 }
 
 mainbox {
     padding: 12px;
 }
 
+
 inputbar {
-    background-color: transparent;
-    padding: 8px 16px;
-    spacing: 8px;
     children: [ entry ];
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    border: 1px solid;
+    border-color: @--col2; 
+    padding: 10px 16px;
+    margin: 5px 0px 10px 0px; 
 }
 
+
 entry {
+    font: "Cantarell bold 12";
     placeholder: "Search...";
-    placeholder-color: #1e1e2e;
+    placeholder-color: #ffffff;
     text-color: @fg-col;
 }
+
 
 listview {
     background-color: transparent;
@@ -43,24 +52,29 @@ listview {
     fixed-height: false;
 }
 
+
 element {
     padding: 10px 16px;
     spacing: 12px;
-    border-radius: 12px;
+    border-radius: 13px;
     background-color: transparent;
 }
 
+
 element selected normal, element selected active {
-    background-color: @sel-bg;
+    background-image: @sel-grad;
+    border: 1px solid;
     text-color: #ffffff;
 }
+
 
 element-icon {
     size: 1.2em;
     vertical-align: 0.5;
 }
 
+
 element-text {
     text-color: inherit;
     vertical-align: 0.5;
-}
+} 

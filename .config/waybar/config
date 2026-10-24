@@ -4,22 +4,25 @@
     "height": 53,
     "spacing": 5,
     "margin-bottom": -11,
-    "modules-left": [
-        "hyprland/workspaces"
-    ],
-    "modules-center": [],
-    "modules-right": [
-        "network",
-        "pulseaudio",
-        "bluetooth",
-        "battery",
-        "temperature",
-        "clock"
-    ],
+    "modules-left": [ "hyprland/workspaces" ],
+    "modules-center": ["custom/dynamic_pill"],
+    "modules-right": [ "network", "pulseaudio", "bluetooth", "battery", "temperature", "clock" ],
     "hyprland/workspaces": {
         "format": "{icon}",
         "format-active": " {icon} ",
         "on-click": "activate"
+    },
+    "custom/dynamic_pill": {
+        "return-type": "json",
+        "format": "{}",
+        "exec": "bash ~/.config/hypr/scripts/tools/start_dyn",
+        "escape": true,
+        "on-click": "swaync-client -t -sw",
+        "on-click-middle": "python3 ~/.config/hypr/scripts/tools/dynamic --toggle",
+        "on-click-right": "python3 ~/.config/hypr/scripts/tools/dynamic --next",
+        "on-scroll-up": "python3 ~/.config/hypr/scripts/tools/dynamic --volume-up",
+        "on-scroll-down": "python3 ~/.config/hypr/scripts/tools/dynamic --volume-down",
+        "smooth-scrolling-threshold": 1
     },
     "clock": {
         "timezone": "Europe/Warsaw",
@@ -29,8 +32,13 @@
         "max-length": 25
     },
     "temperature": {
-        "critical-threshold": 80,
-        "format-critical": "{temperatureC} °C ",
+        "critical-threshold": 95,
+        "format-critical": "{temperatureC} °C ",
+        "format": "{temperatureC} °C"
+    },
+    "temperature": {
+        "critical-threshold": 95,
+        "format-critical": "{temperatureC} °C ",
         "format": "{temperatureC} °C"
     },
     "battery": {
@@ -38,7 +46,7 @@
             "warning": 30,
             "critical": 15
         },
-        "format": "{capacity}% {icon}",
+        "format": "{capacity}%  {icon}",
         "format-charging": "{capacity}% {icon}",
         "format-plugged": "{capacity}% {icon}",
         "tooltip-format": "{timeTo}",
@@ -53,7 +61,7 @@
         "format-icons": ["", "", "", ""],
         "on-click": "nm-connection-editor"
     },
-    "bluetooth": {
+   "bluetooth": {
         "format": " {status}",
         "format-connected": "{device_alias}",
         "tooltip-format": "{controller_alias}\t{controller_address}\n\n{num_connections} connected",
@@ -64,13 +72,14 @@
     },
     "pulseaudio": {
         "scroll-step": 5,
-        "format": "{icon}   {volume}%",
-        "format-bluetooth": "{icon}    {volume}%",
+        "format": "{volume}%",
+        "format-bluetooth": "{volume}%",
         "format-bluetooth-muted": " {icon}",
         "format-muted": " Muted",
         "format-icons": {
             "default": ["", "", ""]
         },
-        "on-click": "pavucontrol"
+        "on-click": "pavucontrol",
+        "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
     }
 }

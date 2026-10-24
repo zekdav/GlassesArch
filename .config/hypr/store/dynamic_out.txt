@@ -1,0 +1,1 @@
+{"text": "󰄳  Notification Center", "class": "idle", "tooltip": "󰂚 SwayNC Notification Center\nClick: Open SwayNC\nScroll: Adjust Volume"}

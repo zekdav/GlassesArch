@@ -1,0 +1,51 @@
+import sys, os, json, socket, argparse, time
+from pathlib import Path
+
+STORE_DIR = Path.home() / ".config" / "hypr" / "store"
+NOTIF_FILE = STORE_DIR / "latest_notif"
+SOCKET_PATH = "/tmp/dynamic_pill.sock"
+
+STORE_DIR.mkdir(parents=True, exist_ok=True)
+
+parser = argparse.ArgumentParser(description="Send notification to Dynamic Pill")
+parser.add_argument("summary", nargs="?", default="", help="Notification summary")
+parser.add_argument("body", nargs="?", default="", help="Notification body")
+parser.add_argument("--app", default="", help="App name")
+parser.add_argument("--urgency", default="", help="Urgency")
+parser.add_argument("--icon", default="", help="Icon path or name")
+
+args, _ = parser.parse_known_args()
+
+app_name = args.app or os.getenv("SWAYNC_APP_NAME") or os.getenv("DUNST_APP_NAME") or ""
+summary = args.summary or os.getenv("SWAYNC_SUMMARY") or os.getenv("DUNST_SUMMARY") or ""
+body = args.body or os.getenv("SWAYNC_BODY") or os.getenv("DUNST_BODY") or ""
+urgency = args.urgency or os.getenv("SWAYNC_URGENCY") or os.getenv("DUNST_URGENCY") or "normal"
+icon = args.icon or os.getenv("SWAYNC_SOUND_FILE") or os.getenv("DUNST_ICON_PATH") or ""
+category = os.getenv("SWAYNC_CATEGORY") or os.getenv("DUNST_CATEGORY") or ""
+
+notif_payload = {
+    "app_name": app_name, "summary": summary, "body": body,
+    "urgency": urgency, "icon": icon, "category": category,
+    "timestamp": time.time(),
+}
+
+delivered = False
+if os.path.exists(SOCKET_PATH):
+    try:
+        sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+        sock.settimeout(0.5)
+        sock.connect(SOCKET_PATH)
+        msg = json.dumps({"action": "notify", "data": notif_payload}) + "\n"
+        sock.sendall(msg.encode("utf-8"))
+        try: sock.recv(256)
+        except: pass
+        sock.close()
+        delivered = True
+    except: pass
+
+tmp_file = NOTIF_FILE.with_suffix(".tmp")
+try:
+    with open(tmp_file, "w", encoding="utf-8") as f:
+        json.dump(notif_payload, f, ensure_ascii=False)
+    tmp_file.replace(NOTIF_FILE)
+except: pass

@@ -1,0 +1,145 @@
+{
+  "$schema": "/etc/xdg/swaync/configSchema.json",
+  "ignore-gtk-theme": true,
+  "positionX": "center",
+  "positionY": "top",
+  "control-center-positionX": "none",
+  "control-center-positionY": "none",
+  "control-center-margin-top": 8,
+  "control-center-margin-bottom": 12,
+  "control-center-margin-right": 0,
+  "control-center-margin-left": 0,
+  "control-center-width": 430,
+  "control-center-height": 680,
+  "control-center-layer": "overlay",
+  "control-center-exclusive-zone": true,
+  "layer": "overlay",
+  "layer-shell": true,
+  "layer-shell-cover-screen": false,
+  "cssPriority": "user",
+  "notification-2fa-action": true,
+  "notification-inline-replies": true,
+  "notification-icon-size": 44,
+  "notification-body-image-height": 100,
+  "notification-body-image-width": 200,
+  "timeout": 0,
+  "timeout-low": 0,
+  "timeout-critical": 0,
+  "notification-window-width": 0,
+  "fit-to-screen": false,
+  "relative-timestamps": true,
+  "keyboard-shortcuts": true,
+  "notification-grouping": true,
+  "image-visibility": "when-available",
+  "transition-time": 250,
+  "hide-on-clear": false,
+  "hide-on-action": true,
+  "text-empty": "No Notifications",
+  "script-fail-notify": false,
+  "scripts": {
+    "dynamic-pill": {
+      "app-name": ".*",
+      "exec": "python3 /home/zek/.config/hypr/scripts/tools/notif"
+    }
+  },
+  "notification-visibility": {
+    "mute-all": {
+      "state": "muted",
+      "app-name": ".*"
+    }
+  },
+  "widgets": [
+    "title#quicksettings",
+    "buttons-grid",
+    "volume",
+    "backlight",
+    "mpris",
+    "title#notifications",
+    "notifications"
+  ],
+  "widget-config": {
+    "title#quicksettings": {
+      "text": "Quick Settings",
+        "clear-all-button": false
+    },
+    "buttons-grid": {
+      "buttons-per-row": 3,
+      "actions": [
+        {
+          "label": "\udb81\udda9   Wi-Fi",
+          "type": "toggle",
+          "active": true,
+          "command": "[[ $SWAYNC_TOGGLE_STATE == true ]] && nmcli radio wifi on || nmcli radio wifi off",
+          "update-command": "[[ $(nmcli radio wifi) == enabled ]] && echo true || echo false"
+        },
+        {
+          "label": "\udb80\udcaf   Bluetooth",
+          "type": "toggle",
+          "active": true,
+          "command": "[[ $SWAYNC_TOGGLE_STATE == true ]] && bluetoothctl power on || bluetoothctl power off",
+          "update-command": "bluetoothctl show | grep -q 'Powered: yes' && echo true || echo false"
+        },
+        {
+          "label": "\udb80\udc9b   DND",
+          "type": "toggle",
+          "active": false,
+          "command": "swaync-client -d -sw",
+          "update-command": "swaync-client -D"
+        },
+        {
+          "label": "\udb81\udd94   Night Light",
+          "type": "toggle",
+          "active": false,
+          "command": "if pgrep -x hyprsunset >/dev/null; then pkill -x hyprsunset; else hyprsunset -t 4500 & fi",
+          "update-command": "pgrep -x hyprsunset >/dev/null && echo true || echo false"
+        },
+        {
+          "label": "\udb81\udcc5   Performance",
+          "type": "toggle",
+          "active": false,
+          "command": "if [ \"$SWAYNC_TOGGLE_STATE\" = true ]; then asusctl profile set Performance; else asusctl profile set Balanced; fi",
+          "update-command": "asusctl profile get | grep -qi Performance && echo true || echo false"
+        },
+        {
+          "label": "\udb81\udd82   VPN",
+          "type": "toggle",
+          "active": false,
+          "command": "vpn_id=$(nmcli -g NAME,TYPE con show | grep -i vpn | head -n1 | cut -d: -f1); if [ -n \"$vpn_id\" ]; then if [ \"$SWAYNC_TOGGLE_STATE\" = true ]; then nmcli con up id \"$vpn_id\"; else nmcli con down id \"$vpn_id\"; fi; fi",
+          "update-command": "nmcli con show --active | grep -qi vpn && echo true || echo false"
+        }
+      ]
+    },
+    "volume": {
+      "label": "Volume      ",
+      "show-per-app": false,
+      "show-per-app-icon": true,
+      "show-per-app-label": true,
+      "expand-per-app": false,
+      "empty-list-label": "No audio apps",
+      "expand-button-label": "\udb80\udd43",
+      "collapse-button-label": "\udb80\udd40"
+    },
+    "backlight": {
+      "label": "Brightness",
+      "device": "nvidia_0",
+      "subsystem": "backlight",
+      "min": 5
+    },
+    "mpris": {
+      "show-album-art": "always",
+      "autohide": false,
+      "blacklist": [
+        "playerctld"
+      ],
+      "loop-carousel": true
+    },
+    "title#notifications": {
+      "text": "Notifications",
+      "clear-all-button": true,
+      "button-text": "Clear All"
+    },
+    "notifications": {
+      "vexpand": true
+    }
+  }
+}

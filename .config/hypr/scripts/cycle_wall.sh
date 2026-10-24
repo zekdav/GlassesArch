@@ -2,6 +2,7 @@
 
 DIR="$HOME/Pictures/wallpapers"
 STATE_FILE="$HOME/.cache/current_wall_state"
+SCRIPTS_DIR="$(dirname "$(readlink -f "$0")")"
 
 if [ ! -d "$DIR" ]; then
     notify-send "Error" "Folder $DIR not found!"
@@ -48,9 +49,9 @@ EXT="${NEXT_WALL##*.}"
 if [[ "${EXT,,}" =~ ^(mp4|webm|mkv|gif)$ ]]; then
     THUMB="/tmp/wallust_thumb.jpg"
     ffmpeg -y -i "$NEXT_WALL" -ss 00:00:01.000 -vframes 1 "$THUMB" -loglevel quiet
-    ~/.config/hypr/scripts/wall_color.sh "$THUMB"
+    "$SCRIPTS_DIR/wall_color.sh" "$THUMB"
 else
-    ~/.config/hypr/scripts/wall_color.sh "$NEXT_WALL"
+    "$SCRIPTS_DIR/wall_color.sh" "$NEXT_WALL"
 fi
 
 notify-send "Wallpaper successfully changed" "$(basename "$NEXT_WALL")"

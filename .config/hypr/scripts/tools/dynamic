@@ -1,0 +1,991 @@
+import sys
+import os
+import subprocess
+import json
+import time
+import threading
+import signal
+import argparse
+import re
+import socket
+import select
+from pathlib import Path
+from typing import Optional, Dict, Any, List
+
+STORE_DIR = Path.home() / ".config" / "hypr" / "store"
+OUT_FILE = STORE_DIR / "dynamic_out.txt"
+NOTIF_FILE = STORE_DIR / "latest_notif"
+SOCKET_PATH = "/tmp/dynamic_pill.sock"
+
+MAX_TEXT_LEN = 36
+SCROLL_INTERVAL = 0.22
+START_PAUSE_TICKS = 10
+LOOP_PAUSE_TICKS = 8
+SEPARATOR = "    •    "
+VOLUME_HUD_DURATION = 1.5
+FEEDBACK_DURATION = 0.8
+
+IDLE_ICONS = ["󰄰", "󰄱", "󰄲", "󰄳", "󰄴", "󰄵", "󰄶", "󰄷"]
+
+APP_PRESETS = [
+    (r"telegram", "", "notif-telegram", "Telegram"),
+    (r"discord|vesktop|webcord", "󰙯", "notif-discord", "Discord"),
+    (r"slack", "󰒱", "notif-discord", "Slack"),
+    (r"whatsapp", "", "notif-telegram", "WhatsApp"),
+    (r"signal", "󰭹", "notif-telegram", "Signal"),
+    (r"element|matrix", "󰣆", "notif-discord", "Matrix"),
+    (r"vk|vkontakte", "", "notif-telegram", "VK"),
+    (r"spotify", "", "notif-spotify", "Spotify"),
+    (r"firefox", "", "notif-browser", "Firefox"),
+    (r"chrome|chromium|brave", "", "notif-browser", "Browser"),
+    (r"youtube", "", "notif-browser", "YouTube"),
+    (r"thunderbird|mail", "", "notif-browser", "Mail"),
+    (r"steam|heroic|lutris", "", "notif-discord", "Steam"),
+    (r"alacritty|kitty|foot|wezterm|terminal", "", "notif-terminal", "Terminal"),
+    (r"code|vscodium|neovim", "󰨞", "notif-terminal", "Code"),
+    (r"hyprshot|grim|slurp|screenshot|swappy|flameshot", "", "notif-screenshot", "Screenshot"),
+    (r"wallpaper|wall|waypaper", "", "notif-wallpaper", "Wallpaper"),
+    (r"bluetooth|blueman", "", "notif-bluetooth", "Bluetooth"),
+    (r"battery|power|charge", "", "notif-battery", "Battery"),
+    (r"pacman|yay|update", "󰣇", "notif-system", "System"),
+]
+
+def get_volume_info():
+    try:
+        res = subprocess.run(
+            ["wpctl", "get-volume", "@DEFAULT_AUDIO_SINK@"],
+            capture_output=True,
+            text=True,
+            timeout=1
+        )
+        if res.returncode == 0:
+            parts = res.stdout.strip().split()
+            if len(parts) >= 2:
+                vol = int(round(float(parts[1]) * 100))
+                is_muted = "[MUTED]" in res.stdout
+                return vol, is_muted
+    except Exception:
+        pass
+
+    try:
+        res = subprocess.run(
+            ["pactl", "get-sink-volume", "@DEFAULT_SINK@"],
+            capture_output=True,
+            text=True,
+            timeout=1
+        )
+        if res.returncode == 0:
+            m = re.search(r"(\d+)%", res.stdout)
+            if m:
+                vol = int(m.group(1))
+                mute_res = subprocess.run(
+                    ["pactl", "get-sink-mute", "@DEFAULT_SINK@"],
+                    capture_output=True,
+                    text=True,
+                    timeout=1
+                )
+                is_muted = "yes" in mute_res.stdout.lower()
+                return vol, is_muted
+    except Exception:
+        pass
+
+    return 100, False
+
+def get_player_volume_info():
+    try:
+        res = subprocess.run(
+            ["playerctl", "volume"],
+            capture_output=True,
+            text=True,
+            timeout=1
+        )
+        if res.returncode == 0 and res.stdout.strip():
+            val = float(res.stdout.strip())
+            vol = int(round(val * 100))
+            vol = max(0, min(100, vol))
+            return vol, vol == 0
+    except Exception:
+        pass
+    return 100, False
+
+def make_volume_bar(vol: int, width: int = 12) -> str:
+    vol = max(0, min(100, vol))
+    pos = int(round((vol / 100.0) * (width - 1)))
+    return "━" * pos + "●" + "─" * (width - 1 - pos)
+
+def make_progress_bar(cur_str: str, tot_str: str, width: int = 14) -> str:
+    def to_secs(s):
+        parts = s.strip().split(':')
+        if len(parts) == 2:
+            return int(parts[0]) * 60 + int(parts[1])
+        elif len(parts) == 3:
+            return int(parts[0]) * 3600 + int(parts[1]) * 60 + int(parts[2])
+        return 0
+
+    try:
+        c, t = to_secs(cur_str), to_secs(tot_str)
+        if t <= 0:
+            return ""
+        ratio = max(0.0, min(1.0, c / t))
+        idx = int(round(ratio * (width - 1)))
+        bar = list("━" * width)
+        bar[idx] = "●"
+        return f"{cur_str} {''.join(bar)} {tot_str}"
+    except Exception:
+        return ""
+
+def send_socket_action(action: str, extra: Optional[dict] = None) -> bool:
+    if not os.path.exists(SOCKET_PATH):
+        return False
+    try:
+        sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+        sock.settimeout(0.5)
+        sock.connect(SOCKET_PATH)
+        payload = {"action": action}
+        if extra:
+            payload.update(extra)
+        sock.sendall((json.dumps(payload) + "\n").encode("utf-8"))
+        try:
+            sock.recv(256)
+        except Exception:
+            pass
+        sock.close()
+        return True
+    except Exception:
+        return False
+
+def execute_action(action: str, extra: Optional[dict] = None):
+    if send_socket_action(action, extra):
+        return
+
+    if action == "toggle":
+        subprocess.run(["playerctl", "play-pause"], stderr=subprocess.DEVNULL)
+    elif action == "next":
+        subprocess.run(["playerctl", "next"], stderr=subprocess.DEVNULL)
+    elif action == "prev":
+        subprocess.run(["playerctl", "previous"], stderr=subprocess.DEVNULL)
+    elif action == "vol-up":
+        subprocess.run(
+            ["playerctl", "volume", "0.05+"],
+            stderr=subprocess.DEVNULL
+        )
+    elif action == "vol-down":
+        subprocess.run(
+            ["playerctl", "volume", "0.05-"],
+            stderr=subprocess.DEVNULL
+        )
+    elif action == "mute":
+        subprocess.run(["playerctl", "play-pause"], stderr=subprocess.DEVNULL)
+
+class Marquee:
+    def __init__(self, max_length=MAX_TEXT_LEN, start_pause=START_PAUSE_TICKS, loop_pause=LOOP_PAUSE_TICKS):
+        self.max_length = max_length
+        self.start_pause = start_pause
+        self.loop_pause = loop_pause
+        self.current_text = ""
+        self.index = 0
+        self.pause_counter = start_pause
+
+    def reset(self, text: str = ""):
+        self.current_text = text.strip()
+        self.index = 0
+        self.pause_counter = self.start_pause
+
+    def get_frame(self, text: str, is_paused: bool = False) -> str:
+        text = text.strip()
+        if not text:
+            return ""
+
+        if text != self.current_text:
+            self.reset(text)
+
+        if len(text) <= self.max_length:
+            return text
+
+        if is_paused:
+            return text[:self.max_length]
+
+        if self.pause_counter > 0:
+            self.pause_counter -= 1
+            return text[:self.max_length]
+
+        loop_str = text + SEPARATOR
+        double_str = loop_str + loop_str
+        frame = double_str[self.index : self.index + self.max_length]
+        self.index = (self.index + 1) % len(loop_str)
+
+        if self.index == 0:
+            self.pause_counter = self.loop_pause
+
+        return frame
+
+class DynamicDaemon:
+    def __init__(self, direct_stdout: bool = False):
+        STORE_DIR.mkdir(parents=True, exist_ok=True)
+        self.lock = threading.Lock()
+        self.running = True
+        self.direct_stdout = direct_stdout
+
+        self.clients = set()
+        self.clients_lock = threading.Lock()
+
+        self.media_marquee = Marquee(max_length=MAX_TEXT_LEN)
+        self.notif_marquee = Marquee(max_length=MAX_TEXT_LEN)
+
+        self.media_clean_text = ""
+        self.media_track = ""
+        self.media_artist = ""
+        self.media_album = ""
+        self.media_duration_str = ""
+        self.media_class = "none"
+        self.media_alt = ""
+        self.media_tooltip = ""
+
+        self.notif_queue: List[Dict[str, Any]] = []
+        self.current_notif: Optional[Dict[str, Any]] = None
+        self.notif_expiry = 0.0
+        self.recent_notifs: Dict[tuple, float] = {}
+
+        self.hud_active = False
+        self.hud_expiry = 0.0
+        self.hud_current_vol = 0.0
+        self.hud_target_vol = 0.0
+        self.hud_is_muted = False
+        self.hud_text = ""
+        self.hud_class = "none"
+        self.hud_tooltip = ""
+
+        self.feedback_active = False
+        self.feedback_expiry = 0.0
+        self.feedback_text = ""
+        self.feedback_class = "feedback"
+
+        self.idle_tick = 0
+        self.wave_idx = 0
+        self.tick_count = 0
+
+        self.last_broadcast = None
+        self.mpris_proc = None
+        self.dbus_proc = None
+
+    def trigger_volume_hud(self):
+        vol, is_muted = get_volume_info()
+        now = time.time()
+        with self.lock:
+            if not self.hud_active:
+                self.hud_current_vol = float(vol)
+            self.hud_target_vol = float(vol)
+            self.hud_is_muted = is_muted
+            self.hud_active = True
+            self.hud_expiry = now + VOLUME_HUD_DURATION
+            if is_muted:
+                self.hud_text = "   Muted"
+                self.hud_class = "volume-muted"
+                self.hud_tooltip = (
+                    " Volume: Muted\n"
+                    "State: Muted\n"
+                    "Click: toggle / scroll to adjust"
+                )
+            else:
+                icon = "" if vol < 50 else ""
+                bar = make_volume_bar(vol)
+                self.hud_text = f"{icon}  {vol}%  {bar}"
+                self.hud_class = "volume"
+                self.hud_tooltip = (
+                    f"{icon} Volume: {vol}%\n"
+                    f"State: Active\n"
+                    f"Click: toggle / scroll to adjust"
+                )
+
+    def trigger_feedback(self, text: str):
+        now = time.time()
+        with self.lock:
+            self.feedback_active = True
+            self.feedback_expiry = now + FEEDBACK_DURATION
+            self.feedback_text = text
+            self.feedback_class = "feedback"
+
+    def dismiss_notification(self):
+        with self.lock:
+            self.current_notif = None
+            self.notif_expiry = 0.0
+            if self.notif_queue:
+                self._activate_next_notification(time.time())
+
+    def get_player_icon(self, player_name: str, status: str) -> str:
+        if status == "paused":
+            return ""
+        p = (player_name or "").lower()
+        if "spotify" in p:
+            return ""
+        elif "firefox" in p:
+            return ""
+        elif "chromium" in p or "chrome" in p:
+            return ""
+        return ""
+
+    def match_app_theme(self, app_name: str, summary: str, body: str, urgency: str):
+        target_str = f"{app_name} {summary}".lower()
+        icon = ""
+        css_class = "notif-normal"
+        friendly_app = app_name.strip()
+
+        for pattern, p_icon, p_class, p_name in APP_PRESETS:
+            if re.search(pattern, target_str):
+                icon = p_icon
+                css_class = p_class
+                if not friendly_app or friendly_app.lower() in ("notify-send", "swaync", "dunst"):
+                    friendly_app = p_name
+                break
+
+        urgency_lower = urgency.lower()
+        if urgency_lower == "critical":
+            css_class = "notif-critical"
+            icon = ""
+        elif urgency_lower == "low" and css_class == "notif-normal":
+            css_class = "notif-low"
+
+        return icon, css_class, friendly_app
+
+    def enqueue_notification(self, app_name: str, summary: str, body: str, urgency: str = "normal"):
+        summary = summary.strip()
+        body = body.strip()
+        app_name = app_name.strip()
+
+        if not summary and not body:
+            return
+
+        now = time.time()
+        fingerprint = (app_name, summary, body)
+        if fingerprint in self.recent_notifs:
+            if now - self.recent_notifs[fingerprint] < 2.0:
+                return
+        self.recent_notifs[fingerprint] = now
+
+        if len(self.recent_notifs) > 60:
+            self.recent_notifs = {k: v for k, v in self.recent_notifs.items() if now - v < 10.0}
+
+        icon, css_class, friendly_name = self.match_app_theme(app_name, summary, body, urgency)
+
+        if friendly_name and friendly_name.lower() not in ("notify-send", ""):
+            if summary and body:
+                display_text = f"[{friendly_name}] {summary}: {body}"
+            elif summary:
+                display_text = f"[{friendly_name}] {summary}"
+            else:
+                display_text = f"[{friendly_name}] {body}"
+        else:
+            display_text = f"{summary}: {body}" if (summary and body) else (summary or body)
+
+        urg_label = urgency.capitalize()
+        tooltip_lines = [
+            f"{icon} {friendly_name or 'Notification'}",
+            "─" * 28,
+        ]
+        if summary:
+            tooltip_lines.append(f"Subject: {summary}")
+        if body:
+            tooltip_lines.append(f"{body}")
+        tooltip_lines.append(f"Urgency: {urg_label}")
+        tooltip_lines.append("─" * 28)
+        tooltip_lines.append("󰒭 MMB / RMB: Dismiss notification")
+
+        tooltip_str = "\n".join(tooltip_lines)
+
+        text_len = len(display_text)
+        duration = min(7.5, max(3.5, 3.0 + text_len * 0.07))
+        if urgency.lower() == "critical":
+            duration = max(duration, 6.0)
+
+        notif_item = {
+            "icon": icon,
+            "class": css_class,
+            "text": display_text,
+            "tooltip": tooltip_str,
+            "duration": duration,
+            "urgency": urgency.lower(),
+        }
+
+        with self.lock:
+            if urgency.lower() == "critical" or not self.current_notif:
+                self.current_notif = notif_item
+                self.notif_expiry = now + duration
+                self.notif_marquee.reset(display_text)
+            else:
+                self.notif_queue.append(notif_item)
+
+    def _activate_next_notification(self, now: float):
+        if self.notif_queue:
+            next_item = self.notif_queue.pop(0)
+            self.current_notif = next_item
+            self.notif_expiry = now + next_item["duration"]
+            self.notif_marquee.reset(next_item["text"])
+        else:
+            self.current_notif = None
+            self.notif_expiry = 0.0
+            self.media_marquee.reset(self.media_clean_text)
+
+    def parse_mpris_line(self, line: str):
+        if not line or not line.strip():
+            return
+
+        try:
+            data = json.loads(line)
+        except Exception:
+            return
+
+        raw_text = data.get("text", "")
+        status_class = data.get("class", "none")
+        alt = data.get("alt", "")
+
+        if status_class not in ("playing", "paused") or not raw_text.strip():
+            with self.lock:
+                self.media_clean_text = ""
+                self.media_class = "none"
+                self.media_tooltip = ""
+            return
+
+        clean_text = (
+            raw_text
+            .replace(" ", "").replace("", "")
+            .replace("▶ ", "").replace("▶", "")
+            .replace("⏸ ", "").replace("⏸", "")
+            .strip()
+        )
+
+        pos_match = re.search(r"\s*\((\d+:\d+(?:/\d+:\d+)?)\)$", clean_text)
+        duration_str = ""
+        track_title = clean_text
+        if pos_match:
+            duration_str = pos_match.group(1).strip()
+            track_title = clean_text[:pos_match.start()].strip()
+
+        artist = ""
+        track = track_title
+        if " - " in track_title:
+            parts = track_title.split(" - ", 1)
+            artist = parts[0].strip()
+            track = parts[1].strip()
+
+        player_name = alt
+        if not player_name:
+            tooltip_orig = data.get("tooltip", "")
+            m = re.search(r"\(([a-zA-Z0-9_-]+)(?:\.instance.*)?\)", tooltip_orig)
+            if m:
+                player_name = m.group(1).lower()
+
+        vol, is_muted = get_volume_info()
+        vol_str = f"{vol}% (Muted)" if is_muted else f"{vol}%"
+        player_icon = self.get_player_icon(player_name, status_class)
+
+        friendly_player = player_name.capitalize() if player_name else "Media"
+        tooltip_lines = [
+            f"{player_icon} {friendly_player} — {'Playing' if status_class == 'playing' else 'Paused'}",
+            "─" * 28,
+            f"🎵 Track: {track}",
+        ]
+        if artist:
+            tooltip_lines.append(f"👤 Artist: {artist}")
+        if duration_str:
+            tooltip_lines.append(f"⏱ Time: {duration_str}")
+            if "/" in duration_str:
+                p_cur, p_tot = duration_str.split("/", 1)
+                prog_bar = make_progress_bar(p_cur, p_tot)
+                if prog_bar:
+                    tooltip_lines.append(f"   {prog_bar}")
+
+        tooltip_lines.append(f" Volume: {vol_str}")
+        tooltip_lines.append("─" * 28)
+        tooltip_lines.append("󰐊 LMB: Open Notification Center")
+        tooltip_lines.append("󰐮 MMB: Play / Pause")
+        tooltip_lines.append("󰒭 RMB: Next track")
+        tooltip_lines.append("󰝝 Scroll: Volume")
+
+        tooltip_formatted = "\n".join(tooltip_lines)
+
+        with self.lock:
+            self.media_clean_text = track_title
+            self.media_track = track
+            self.media_artist = artist
+            self.media_duration_str = duration_str
+            self.media_class = status_class
+            self.media_alt = player_name
+            self.media_tooltip = tooltip_formatted
+
+    def mpris_worker(self):
+        while self.running:
+            try:
+                self.mpris_proc = subprocess.Popen(
+                    ["waybar-mpris", "--position", "--autofocus"],
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.DEVNULL,
+                    text=True,
+                    bufsize=1
+                )
+
+                for line in iter(self.mpris_proc.stdout.readline, ""):
+                    if not self.running:
+                        break
+                    self.parse_mpris_line(line)
+
+            except Exception:
+                time.sleep(2)
+            finally:
+                if self.mpris_proc:
+                    try:
+                        self.mpris_proc.terminate()
+                    except Exception:
+                        pass
+                with self.lock:
+                    self.media_clean_text = ""
+                    self.media_class = "none"
+            time.sleep(1)
+
+    def dbus_monitor_worker(self):
+        while self.running:
+            try:
+                self.dbus_proc = subprocess.Popen(
+                    [
+                        "stdbuf", "-oL", "dbus-monitor",
+                        "type='method_call',interface='org.freedesktop.Notifications',member='Notify'"
+                    ],
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.DEVNULL,
+                    text=True,
+                    bufsize=1
+                )
+
+                state = 0
+                app, summary, body, urgency = "", "", "", "normal"
+
+                def _extract(s):
+                    m = re.search(r'^string "(.*)"', s)
+                    return m.group(1).replace('\\"', '"') if m else ""
+
+                for line in iter(self.dbus_proc.stdout.readline, ""):
+                    if not self.running:
+                        break
+                    line = line.strip()
+                    if "member=Notify" in line:
+                        state = 1
+                        app, summary, body, urgency = "", "", "", "normal"
+                        continue
+
+                    if state == 1 and line.startswith("string "):
+                        app = _extract(line)
+                        state = 2
+                        continue
+                    if state == 2 and line.startswith("uint32 "):
+                        state = 3
+                        continue
+                    if state == 3 and line.startswith("string "):
+                        state = 4
+                        continue
+                    if state == 4 and line.startswith("string "):
+                        summary = _extract(line)
+                        state = 5
+                        continue
+                    if state == 5 and line.startswith("string "):
+                        body = _extract(line)
+                        state = 6
+                        continue
+                    if state == 6:
+                        if "variant" in line and "byte" in line:
+                            try:
+                                val = int(line.split()[-1])
+                                urgency = "critical" if val == 2 else ("low" if val == 0 else "normal")
+                            except Exception:
+                                pass
+                        if line.startswith("int32 "):
+                            self.enqueue_notification(app, summary, body, urgency)
+                            state = 0
+
+            except Exception:
+                time.sleep(2)
+            finally:
+                if self.dbus_proc:
+                    try:
+                        self.dbus_proc.terminate()
+                    except Exception:
+                        pass
+            time.sleep(1)
+
+    def file_notif_worker(self):
+        last_mtime = 0.0
+        while self.running:
+            try:
+                if NOTIF_FILE.exists():
+                    mtime = NOTIF_FILE.stat().st_mtime
+                    if mtime > last_mtime:
+                        last_mtime = mtime
+                        notif_data = None
+                        try:
+                            with open(NOTIF_FILE, "r", encoding="utf-8") as f:
+                                notif_data = json.load(f)
+                        except Exception:
+                            try:
+                                import pickle
+                                with open(NOTIF_FILE, "rb") as f:
+                                    notif_data = pickle.load(f)
+                            except Exception:
+                                pass
+
+                        if isinstance(notif_data, dict):
+                            self.enqueue_notification(
+                                app_name=notif_data.get("app_name") or "",
+                                summary=notif_data.get("summary") or "",
+                                body=notif_data.get("body") or "",
+                                urgency=notif_data.get("urgency") or "normal"
+                            )
+            except Exception:
+                pass
+            time.sleep(0.3)
+
+    def socket_server_worker(self):
+        if os.path.exists(SOCKET_PATH):
+            try:
+                os.remove(SOCKET_PATH)
+            except Exception:
+                pass
+
+        server = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+        server.bind(SOCKET_PATH)
+        server.listen(10)
+        server.settimeout(1.0)
+
+        while self.running:
+            try:
+                conn, _ = server.accept()
+            except socket.timeout:
+                continue
+            except Exception:
+                break
+
+            threading.Thread(target=self._handle_client, args=(conn,), daemon=True).start()
+
+        server.close()
+
+    def _handle_client(self, conn: socket.socket):
+        conn.settimeout(2.0)
+        try:
+            raw = conn.recv(4096).decode("utf-8")
+            if not raw:
+                conn.close()
+                return
+
+            line = raw.strip().split("\n")[0]
+            data = json.loads(line)
+            action = data.get("action", "")
+
+            if action == "stream":
+                conn.settimeout(None)
+                with self.clients_lock:
+                    self.clients.add(conn)
+                return
+
+            if action == "vol-up":
+                subprocess.run(
+                    ["wpctl", "set-volume", "-l", "1.0", "@DEFAULT_AUDIO_SINK@", "5%+"],
+                    stderr=subprocess.DEVNULL
+                )
+                self.trigger_volume_hud()
+            elif action == "vol-down":
+                subprocess.run(
+                    ["wpctl", "set-volume", "-l", "1.0", "@DEFAULT_AUDIO_SINK@", "5%-"],
+                    stderr=subprocess.DEVNULL
+                )
+                self.trigger_volume_hud()
+            elif action == "mute":
+                subprocess.run(
+                    ["wpctl", "set-mute", "@DEFAULT_AUDIO_SINK@", "toggle"],
+                    stderr=subprocess.DEVNULL
+                )
+                self.trigger_volume_hud()
+            elif action == "toggle":
+                with self.lock:
+                    has_notif = (self.current_notif is not None)
+                if has_notif:
+                    self.dismiss_notification()
+                subprocess.run(["playerctl", "play-pause"], stderr=subprocess.DEVNULL)
+            elif action == "next":
+                with self.lock:
+                    has_notif = (self.current_notif is not None)
+                if has_notif:
+                    self.dismiss_notification()
+                else:
+                    subprocess.run(["playerctl", "next"], stderr=subprocess.DEVNULL)
+            elif action == "prev":
+                with self.lock:
+                    has_notif = (self.current_notif is not None)
+                if has_notif:
+                    self.dismiss_notification()
+                else:
+                    subprocess.run(["playerctl", "previous"], stderr=subprocess.DEVNULL)
+            elif action == "dismiss":
+                self.dismiss_notification()
+            elif action == "notify":
+                notif_info = data.get("data", {})
+                self.enqueue_notification(
+                    app_name=notif_info.get("app_name", ""),
+                    summary=notif_info.get("summary", ""),
+                    body=notif_info.get("body", ""),
+                    urgency=notif_info.get("urgency", "normal")
+                )
+
+            conn.sendall(b'{"status":"ok"}\n')
+            conn.close()
+        except Exception:
+            try:
+                conn.close()
+            except Exception:
+                pass
+
+    def broadcast_payload(self, payload: dict):
+        json_bytes = (json.dumps(payload, ensure_ascii=False) + "\n").encode("utf-8")
+
+        if self.direct_stdout or not sys.stdout.isatty():
+            try:
+                sys.stdout.buffer.write(json_bytes)
+                sys.stdout.flush()
+            except Exception:
+                pass
+
+        with self.clients_lock:
+            dead_clients = []
+            for client in self.clients:
+                try:
+                    client.sendall(json_bytes)
+                except Exception:
+                    dead_clients.append(client)
+            for dc in dead_clients:
+                self.clients.discard(dc)
+                try:
+                    dc.close()
+                except Exception:
+                    pass
+
+        if payload != self.last_broadcast:
+            self.last_broadcast = payload
+            tmp_file = OUT_FILE.with_suffix(".tmp")
+            try:
+                with open(tmp_file, "wb") as f:
+                    f.write(json_bytes)
+                tmp_file.replace(OUT_FILE)
+            except Exception:
+                pass
+
+    def ticker_worker(self):
+        while self.running:
+            now = time.time()
+            output_doc = {"text": "󰄰  Notification Center", "class": "idle", "tooltip": "󰂚 SwayNC Notification Center\nClick: Open SwayNC\nScroll: Adjust Volume"}
+
+            with self.lock:
+                if self.hud_active:
+                    if now < self.hud_expiry:
+                        if not self.hud_is_muted:
+                            if abs(self.hud_current_vol - self.hud_target_vol) > 0.5:
+                                self.hud_current_vol += (self.hud_target_vol - self.hud_current_vol) * 0.5
+                            else:
+                                self.hud_current_vol = self.hud_target_vol
+                            cur_v = int(round(self.hud_current_vol))
+                            icon = "" if cur_v < 50 else ""
+                            bar = make_volume_bar(cur_v, width=12)
+                            self.hud_text = f"{icon}  {cur_v}%  {bar}"
+                        output_doc = {
+                            "text": self.hud_text,
+                            "class": self.hud_class,
+                            "tooltip": self.hud_tooltip,
+                        }
+                    else:
+                        self.hud_active = False
+
+                if not self.hud_active and self.current_notif:
+                    if now < self.notif_expiry:
+                        notif_frame = self.notif_marquee.get_frame(self.current_notif["text"])
+                        icon = self.current_notif["icon"]
+                        output_doc = {
+                            "text": f"{icon}  {notif_frame}",
+                            "class": self.current_notif["class"],
+                            "tooltip": self.current_notif["tooltip"],
+                        }
+                    else:
+                        self._activate_next_notification(now)
+
+                if not self.hud_active and not self.current_notif:
+                    if self.media_clean_text and self.media_class in ("playing", "paused"):
+                        is_paused = (self.media_class == "paused")
+                        player_icon = self.get_player_icon(self.media_alt, self.media_class)
+                        scroll_frame = self.media_marquee.get_frame(self.media_clean_text, is_paused=is_paused)
+
+                        output_doc = {
+                            "text": f"{player_icon}  {scroll_frame}",
+                            "class": self.media_class,
+                            "tooltip": self.media_tooltip,
+                            "alt": self.media_alt,
+                        }
+                    else:
+                        icon = IDLE_ICONS[int(self.idle_tick / 2) % len(IDLE_ICONS)]
+                        output_doc = {
+                            "text": f"{icon}  Notification Center",
+                            "class": "idle",
+                            "tooltip": "󰂚 SwayNC Notification Center\nClick: Open SwayNC\nScroll: Adjust Volume"
+                        }
+                        self.idle_tick += 1
+
+            self.broadcast_payload(output_doc)
+            time.sleep(SCROLL_INTERVAL)
+
+    def start(self):
+        def handle_signal(sig, frame):
+            self.running = False
+            if self.mpris_proc:
+                try:
+                    self.mpris_proc.terminate()
+                except Exception:
+                    pass
+            if self.dbus_proc:
+                try:
+                    self.dbus_proc.terminate()
+                except Exception:
+                    pass
+            if os.path.exists(SOCKET_PATH):
+                try:
+                    os.remove(SOCKET_PATH)
+                except Exception:
+                    pass
+            self.broadcast_payload({"text": "󰄰  Notification Center", "class": "idle", "tooltip": ""})
+            sys.exit(0)
+
+        signal.signal(signal.SIGINT, handle_signal)
+        signal.signal(signal.SIGTERM, handle_signal)
+
+        self.broadcast_payload({"text": "󰄰  Notification Center", "class": "idle", "tooltip": "󰂚 SwayNC Notification Center\nClick: Open SwayNC\nScroll: Adjust Volume"})
+
+        threads = [
+            threading.Thread(target=self.mpris_worker, daemon=True),
+            threading.Thread(target=self.dbus_monitor_worker, daemon=True),
+            threading.Thread(target=self.file_notif_worker, daemon=True),
+            threading.Thread(target=self.socket_server_worker, daemon=True),
+            threading.Thread(target=self.ticker_worker, daemon=True),
+        ]
+
+        for t in threads:
+            t.start()
+
+        while self.running:
+            time.sleep(1)
+
+def stream_client_mode():
+    while True:
+        try:
+            if not os.path.exists(SOCKET_PATH):
+                subprocess.Popen([sys.executable, __file__], stderr=subprocess.DEVNULL)
+                time.sleep(0.5)
+
+            sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+            sock.connect(SOCKET_PATH)
+            sock.sendall(b'{"action":"stream"}\n')
+
+            reader = sock.makefile("r", encoding="utf-8")
+            for line in reader:
+                if not line:
+                    break
+                sys.stdout.write(line)
+                sys.stdout.flush()
+
+            sock.close()
+        except Exception:
+            if OUT_FILE.exists():
+                try:
+                    with open(OUT_FILE, "r", encoding="utf-8") as f:
+                        line = f.read().strip()
+                        if line:
+                            sys.stdout.write(line + "\n")
+                            sys.stdout.flush()
+                except Exception:
+                    pass
+            time.sleep(0.3)
+
+def main():
+    parser = argparse.ArgumentParser(description="Dynamic Waybar Audio & Pill Manager")
+    parser.add_argument("--toggle", action="store_true", help="Toggle play/pause")
+    parser.add_argument("--next", action="store_true", help="Next track")
+    parser.add_argument("--prev", action="store_true", help="Previous track")
+    parser.add_argument("--volume-up", "--vol-up", action="store_true", dest="vol_up", help="Volume up 5 percent")
+    parser.add_argument("--volume-down", "--vol-down", action="store_true", dest="vol_down", help="Volume down 5 percent")
+    parser.add_argument("--mute", action="store_true", help="Toggle sink mute")
+    parser.add_argument("--dismiss", "--dismiss-notif", action="store_true", dest="dismiss", help="Dismiss active notification")
+    parser.add_argument("--stream", action="store_true", help="Stream live JSON to stdout (for Waybar)")
+    parser.add_argument("--notify", type=str, metavar="SUMMARY", help="Display notification in pill")
+    parser.add_argument("--body", type=str, default="", help="Notification body text")
+    parser.add_argument("--app", type=str, default="", help="Notification app name")
+    parser.add_argument("--urgency", type=str, default="normal", help="Urgency (low, normal, critical)")
+
+    args = parser.parse_args()
+
+    if args.toggle:
+        execute_action("toggle")
+        return
+    if args.next:
+        execute_action("next")
+        return
+    if args.prev:
+        execute_action("prev")
+        return
+    if args.vol_up:
+        execute_action("vol-up")
+        return
+    if args.vol_down:
+        execute_action("vol-down")
+        return
+    if args.mute:
+        execute_action("mute")
+        return
+    if args.dismiss:
+        execute_action("dismiss")
+        return
+    if args.notify:
+        execute_action("notify", {
+            "data": {
+                "app_name": args.app,
+                "summary": args.notify,
+                "body": args.body,
+                "urgency": args.urgency,
+            }
+        })
+        return
+
+    if args.stream:
+        if os.path.exists(SOCKET_PATH):
+            try:
+                test_sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+                test_sock.settimeout(0.3)
+                test_sock.connect(SOCKET_PATH)
+                test_sock.close()
+                stream_client_mode()
+                return
+            except Exception:
+                pass
+        daemon = DynamicDaemon(direct_stdout=True)
+        daemon.start()
+        return
+
+    if os.path.exists(SOCKET_PATH):
+        try:
+            test_sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+            test_sock.settimeout(0.3)
+            test_sock.connect(SOCKET_PATH)
+            test_sock.close()
+            if not sys.stdout.isatty():
+                stream_client_mode()
+            else:
+                print("DynamicDaemon is already running.")
+            return
+        except Exception:
+            pass
+
+    daemon = DynamicDaemon(direct_stdout=not sys.stdout.isatty())
+    daemon.start()
+
+if __name__ == "__main__":
+    main()

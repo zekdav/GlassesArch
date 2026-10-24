@@ -1,12 +1,15 @@
 * {
-    bg-col: #FCFFFAE6;
-    fg-col: #151529;
-    border-col: #1515291A;
-    sel-bg: #337BCC80;
-    col0: #FCFFFA;
-    col1: #C3BDC6;
-    col2: #7BC0CD;
-    col3: #EB7B9A;
-    col4: #337BCC;
-    col8: #9EAC94;
+    bg-col: #FFFCFFE6;
+    fg-col: #040B19;
+    border-col: #040B191A;
+    sel-bg: #735C4180;
+    --col0: #FFFEFF;
+    --col1: #9D8AA5;
+    --col2: #176DB2;
+    --col3: #7D537C;
+    --col4: #735C41;
+    --col5: #3E0E09;
+    --col8: #7F7286;
+    
+    sel-grad: linear-gradient(45deg, #176DB2, #7D537C);
 }

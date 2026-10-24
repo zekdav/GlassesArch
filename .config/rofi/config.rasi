@@ -1,0 +1,7 @@
+configuration {
+  
+  drun-match-fields: "name";
+  sort: true;
+  sorting-method: "fzf";
+  disable-history: false;
+}

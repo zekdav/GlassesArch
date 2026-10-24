@@ -1,0 +1,408 @@
+@import "colors.css";
+
+* {
+    font-family: Cantarell;
+    font-weight: bold;
+    outline: none;
+    background-clip: padding-box;
+}
+
+window,
+blankwindow,
+.blank-window,
+.control-center-list {
+    background-color: transparent;
+    background: transparent;
+    font-weight: bold;
+}
+
+notificationwindow,
+.floating-notifications {
+    opacity: 0;
+    min-width: 0;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+}
+
+scrollbar,
+scrollbar trough,
+scrollbar slider {
+    opacity: 0;
+    min-width: 0;
+    min-height: 0;
+    border: none;
+    background: transparent;
+}
+
+.control-center {
+    background-color: alpha(@color6, 0.5);
+    border-radius: 24px;
+    box-shadow: 0 20px 50px 0 alpha(@foreground, 0.65),
+                0 4px 20px 0 alpha(@color2, 0.25),
+                inset 0 1px 1px 0 alpha(@background, 0.2);
+    color: @background;
+    padding: 16px 14px;
+    margin: 8px 0;
+    transition: all 250ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.control-center-list {
+    background: transparent;
+    padding: 2px;
+}
+
+.control-center-list-placeholder {
+    opacity: 0.45;
+    color: alpha(@background, 0.6);
+    font-size: 14px;
+    font-weight: 500;
+    margin: 36px 16px;
+}
+
+.widget-title,
+.widget-inhibitors {
+    margin: 8px 6px 6px 6px;
+    padding: 2px;
+}
+
+.widget-title > label,
+.widget-inhibitors > label {
+    font-size: 16px;
+    font-weight: 700;
+    color: @background;
+    letter-spacing: -0.2px;
+}
+
+.widget-title > button,
+.widget-inhibitors > button {
+    background-color: alpha(@background, 0.1);
+    border: 1px solid alpha(@background, 0.16);
+    border-radius: 999px;
+    color: alpha(@background, 0.85);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 14px;
+    margin-left: 8px;
+    box-shadow: 0 1px 3px alpha(@foreground, 0.3);
+    transition: background-color 180ms cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 180ms cubic-bezier(0.16, 1, 0.3, 1),
+                color 150ms ease,
+                box-shadow 200ms ease;
+}
+
+.widget-title > button:hover,
+.widget-inhibitors > button:hover {
+    background-color: alpha(@background, 0.2);
+    border-color: alpha(@background, 0.3);
+    color: @background;
+    box-shadow: 0 2px 8px alpha(@color2, 0.3);
+}
+
+.widget-title > button:active,
+.widget-inhibitors > button:active {
+    background-color: alpha(@color2, 0.4);
+    color: @background;
+    transition: all 70ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.widget-buttons-grid {
+    margin: 6px 2px 10px 2px;
+    padding: 0;
+}
+
+.widget-buttons-grid flowbox {
+    margin: 0;
+    padding: 0;
+}
+
+.widget-buttons-grid flowboxchild {
+    margin: 3px;
+    padding: 0;
+    border-radius: 999px;
+}
+
+.widget-buttons-grid button,
+.widget-buttons-grid flowboxchild > button {
+    background-color: alpha(@background, 0.09);
+    border: 1px solid alpha(@background, 0.13);
+    border-radius: 999px;
+    color: @background;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 8px 12px;
+    min-height: 38px;
+    min-width: 116px;
+    box-shadow: 0 2px 6px alpha(@foreground, 0.25);
+    transition: background-color 200ms cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 200ms cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 250ms ease-in-out;
+}
+
+.widget-buttons-grid button:hover,
+.widget-buttons-grid flowboxchild > button:hover {
+    background-color: alpha(@background, 0.18);
+    border-color: alpha(@background, 0.28);
+    box-shadow: 0 4px 14px alpha(@foreground, 0.35);
+}
+
+.widget-buttons-grid button:active,
+.widget-buttons-grid flowboxchild > button:active {
+    background-color: alpha(@background, 0.28);
+    transition: all 70ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.widget-buttons-grid button.toggle:checked,
+.widget-buttons-grid button.active,
+.widget-buttons-grid flowboxchild > button.toggle:checked,
+.widget-buttons-grid flowboxchild > button.active {
+    background: linear-gradient(135deg, @color3, @color2);
+    border: 1px solid alpha(@background, 0.3);
+    color: @background;
+    box-shadow: 0 4px 16px 0 alpha(@color2, 0.55),
+                inset 0 1px 1px 0 alpha(@background, 0.35);
+}
+
+.widget-buttons-grid button.toggle:checked:hover,
+.widget-buttons-grid button.active:hover,
+.widget-buttons-grid flowboxchild > button.toggle:checked:hover,
+.widget-buttons-grid flowboxchild > button.active:hover {
+    background: linear-gradient(135deg, alpha(@color3, 0.92), alpha(@color2, 0.92));
+    border-color: alpha(@background, 0.45);
+    box-shadow: 0 6px 20px 0 alpha(@color2, 0.7),
+                inset 0 1px 1px 0 alpha(@background, 0.45);
+}
+
+.widget-volume,
+.widget-backlight,
+.widget-slider {
+    background-color: transparent;
+    border: none;
+    border-radius: 16px;
+    padding: 6px 4px;
+    margin: 4px 2px;
+}
+
+.widget-volume label,
+.widget-backlight label,
+.widget-slider label {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: @background;
+    margin-bottom: 6px;
+    margin-left: 2px;
+}
+
+scale trough {
+    background-color: alpha(@background, 0.12);
+    border: none;
+    border-radius: 999px;
+    min-height: 16px;
+    min-width: 140px;
+    box-shadow: inset 0 1px 3px alpha(@foreground, 0.4);
+    transition: background-color 200ms ease;
+}
+
+scale:hover trough {
+    background-color: alpha(@background, 0.18);
+}
+
+scale highlight {
+    background: linear-gradient(90deg, @color3, @color2);
+    border: none;
+    border-radius: 999px;
+    min-height: 16px;
+    box-shadow: 0 2px 10px alpha(@color2, 0.45);
+}
+
+scale slider {
+    min-width: 0px;
+    min-height: 0px;
+    opacity: 0;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    box-shadow: none;
+}
+
+.widget-mpris {
+    padding: 0;
+    margin: 8px 4px 6px 4px;
+}
+
+.widget-mpris .widget-mpris-player { border-radius: 25px; }
+
+
+.widget-mpris .widget-mpris-album-art {
+    border-radius: 14px;
+    box-shadow: 0 4px 14px alpha(@foreground, 0.55);
+    margin-right: 14px;
+    -gtk-icon-size: 54px;
+    min-width: 54px;
+    min-height: 54px;
+}
+
+.widget-mpris .widget-mpris-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: @background;
+    margin-bottom: 2px;
+}
+
+.widget-mpris .widget-mpris-subtitle {
+    font-size: 12px;
+    font-weight: 500;
+    color: alpha(@background, 0.65);
+    margin-bottom: 6px;
+}
+
+.widget-mpris .widget-mpris-player button,
+.widget-mpris .widget-mpris-player .mpris-overlay button {
+    background-color: alpha(@background, 0.08);
+    border: 1px solid alpha(@background, 0.12);
+    border-radius: 999px;
+    color: @background;
+    min-width: 34px;
+    min-height: 34px;
+    padding: 4px;
+    margin: 2px 4px;
+    transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1),
+                color 160ms ease,
+                box-shadow 160ms ease;
+}
+
+.widget-mpris .widget-mpris-player button:hover,
+.widget-mpris .widget-mpris-player .mpris-overlay button:hover {
+    background-color: alpha(@background, 0.2);
+    color: @background;
+    box-shadow: 0 0 10px alpha(@color2, 0.45);
+}
+
+.widget-mpris .widget-mpris-player button:active,
+.widget-mpris .widget-mpris-player .mpris-overlay button:active {
+    background-color: alpha(@color2, 0.45);
+    transition: all 60ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.widget-mpris scale {
+    margin-top: 8px;
+    margin-bottom: 2px;
+    min-height: 4px;
+    padding: 0;
+}
+
+.widget-mpris scale trough {
+    background-color: alpha(@background, 0.14);
+    border-radius: 999px;
+    min-height: 4px;
+}
+
+.widget-mpris scale highlight {
+    background: linear-gradient(90deg, @color3, @color2);
+    border-radius: 999px;
+    min-height: 4px;
+}
+
+.notification-row {
+    background: transparent;
+    outline: none;
+    margin: 0;
+    padding: 0;
+}
+
+.notification-row .notification-background {
+    padding: 4px 2px;
+}
+
+.notification-row .notification-background .notification,
+.notification {
+    background-color: alpha(@background, 0.08);
+    border-radius: 16px;
+    padding: 12px 14px;
+    margin: 4px 0;
+    box-shadow: 0 4px 16px alpha(@foreground, 0.25);
+    transition: background-color 200ms cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 200ms cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 250ms ease-in-out;
+}
+
+.notification-row:first-child .notification-background .notification,
+.notification.critical {
+    background: linear-gradient(135deg, alpha(@color5, 0.35), alpha(@color3, 0.22));
+    border: 1px solid alpha(@color5, 0.55);
+    box-shadow: 0 6px 20px alpha(@color5, 0.35);
+}
+
+.notification-default-action {
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    border-radius: 16px;
+    color: @background;
+}
+
+.notification-content {
+    background: transparent;
+    padding: 2px;
+}
+
+.notification-content .image {
+    border-radius: 999px;
+    margin-right: 12px;
+    -gtk-icon-size: 42px;
+    box-shadow: 0 2px 6px alpha(@foreground, 0.4);
+}
+
+.notification-content .app-icon {
+    border-radius: 6px;
+    margin-right: 8px;
+    -gtk-icon-size: 18px;
+}
+
+.summary {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: @background;
+    letter-spacing: -0.1px;
+}
+
+.time {
+    font-size: 11px;
+    font-weight: 500;
+    color: alpha(@background, 0.5);
+    margin-right: 24px;
+}
+
+.body {
+    font-size: 12.5px;
+    font-weight: 400;
+    color: alpha(@background, 0.85);
+    margin-top: 4px;
+    line-height: 1.4;
+}
+
+.close-button {
+    background-color: alpha(@background, 0.1);
+    border: 1px solid alpha(@background, 0.1);
+    border-radius: 999px;
+    color: alpha(@background, 0.7);
+    min-width: 22px;
+    min-height: 22px;
+    padding: 0;
+    margin-top: 6px;
+    margin-right: 6px;
+    transition: background-color 180ms cubic-bezier(0.16, 1, 0.3, 1),
+                color 180ms ease,
+                box-shadow 200ms ease;
+}
+
+.close-button:hover {
+    background-color: alpha(@color5, 0.85);
+    border-color: alpha(@color5, 0.95);
+    color: @background;
+    box-shadow: 0 2px 8px alpha(@color5, 0.5);
+}
