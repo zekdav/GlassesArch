@@ -6,10 +6,10 @@ sed -i 's/palette = ".*/palette = "light"/' ~/.config/wallust/wallust.toml
 
 wallust run "$IMG"
 
-sleep 0.2
+sleep 0.05
 
 hyprctl reload
 killall -SIGUSR2 waybar
 swaync-client -rs
 
-"$SCRIPTS_DIR/sddm_blur.sh" "$IMG" &
+nice -n 19 "$SCRIPTS_DIR/sddm_blur.sh" "$IMG" &
