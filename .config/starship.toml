@@ -1,0 +1,16 @@
+# ~/.config/starship.toml
+
+# 1. Настройка ПАПКИ (Тильды ~)
+[directory]
+style = "bold #f38ba8"  # Розовый цвет (Hex-код)
+truncation_length = 3   # Сколько папок показывать
+truncation_symbol = "…/"
+
+[character]
+success_symbol = "[❯](bold #f38ba8)" 
+
+error_symbol = "[❯](bold red)"
+
+[git_branch]
+style = "bold #eba0ac"
+symbol = " "
