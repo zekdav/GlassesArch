@@ -40,7 +40,7 @@ scrollbar slider {
 .control-center {
     background-color: alpha(@color6, 0.5);
     border-radius: 24px;
-    box-shadow: 0 20px 50px 0 alpha(@foreground, 0.65),
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2),
                 0 4px 20px 0 alpha(@color2, 0.25),
                 inset 0 1px 1px 0 alpha(@background, 0.2);
     color: @background;
@@ -300,6 +300,7 @@ scale slider {
     outline: none;
     margin: 0;
     padding: 0;
+    border-radius: 20px;
 }
 
 .notification-row .notification-background {
@@ -311,11 +312,12 @@ scale slider {
     border-radius: 16px;
     padding: 12px 14px;
     margin: 4px 0;
+    box-shadow: none;
     transition: background-color 200ms cubic-bezier(0.16, 1, 0.3, 1),
                 border-color 200ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.notification-row:first-child .notification-background .notification,
+.notification-row .notification-background .notification,
 .notification.critical {
     background: linear-gradient(135deg, alpha(@color5, 0.35), alpha(@color3, 0.22));
     border: 1px solid alpha(@color5, 0.55);
