@@ -100,16 +100,28 @@ The main modifier key is `SUPER`.
 2. Ensure you have the required dependencies installed via `pacman` or `yay`:
    
    ```bash
-   yay -S hyprland waybar rofi-wayland kitty waypaper mpvpaper swaybg wallust ffmpeg starship
+   yay -S hyprland waybar rofi-wayland kitty waypaper mpvpaper swaybg wallust ffmpeg starship zsh ttf-fira-code ttf-nerd-fonts-symbols adw-gtk-theme papirus-icon-theme bibata-cursor-theme-bin nwg-look qt5ct qt6ct
    ```
 
 3. Backup your existing configurations!
 
-4. Copy the contents of the config folder to your ~/.config/ directory.
+4. Copy the configurations to your home directory:
+   ```bash
+   cp -r .config/* ~/.config/
+   cp .zshrc ~/.zshrc
+   ```
 
-5. Place your favorite images and videos in ~/Pictures/wallpapers.
+5. Apply dark theme and cursor settings for GTK/Nautilus:
+   ```bash
+   gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+   gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3-dark'
+   gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Light'
+   gsettings set org.gnome.desktop.interface cursor-theme 'Bibata-Modern-Classic'
+   ```
 
-6. Press Super + W to initialize the dynamic theming script. Enjoy!
+6. Place your favorite images and videos in ~/Pictures/wallpapers.
+
+7. Press Super + W to initialize the dynamic theming script. Enjoy!
 
 ---
 
