@@ -100,7 +100,8 @@ The main modifier key is `SUPER`.
 2. Ensure you have the required dependencies installed via `pacman` or `yay`:
    
    ```bash
-   yay -S hyprland waybar rofi-wayland kitty waypaper mpvpaper swaybg wallust ffmpeg
+   yay -S hyprland waybar rofi-wayland kitty waypaper mpvpaper swaybg wallust ffmpeg starship
+   ```
 
 3. Backup your existing configurations!
 

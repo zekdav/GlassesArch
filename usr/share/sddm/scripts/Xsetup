@@ -1,4 +1,0 @@
-#!/bin/sh
-# Xsetup - run as root before the login dialog appears
-
-xrandr --output eDP-1 --rate 144
