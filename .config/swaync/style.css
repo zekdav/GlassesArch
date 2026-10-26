@@ -161,8 +161,6 @@ scrollbar slider {
     background: linear-gradient(135deg, @color3, @color2);
     border: 1px solid alpha(@background, 0.3);
     color: @background;
-    box-shadow: 0 4px 16px 0 alpha(@color2, 0.55),
-                inset 0 1px 1px 0 alpha(@background, 0.35);
 }
 
 .widget-buttons-grid button.toggle:checked:hover,
@@ -171,8 +169,6 @@ scrollbar slider {
 .widget-buttons-grid flowboxchild > button.active:hover {
     background: linear-gradient(135deg, alpha(@color3, 0.92), alpha(@color2, 0.92));
     border-color: alpha(@background, 0.45);
-    box-shadow: 0 6px 20px 0 alpha(@color2, 0.7),
-                inset 0 1px 1px 0 alpha(@background, 0.45);
 }
 
 .widget-volume,
