@@ -86,11 +86,9 @@ scrollbar slider {
     font-weight: 600;
     padding: 5px 14px;
     margin-left: 8px;
-    box-shadow: 0 1px 3px alpha(@foreground, 0.3);
     transition: background-color 180ms cubic-bezier(0.16, 1, 0.3, 1),
                 border-color 180ms cubic-bezier(0.16, 1, 0.3, 1),
-                color 150ms ease,
-                box-shadow 200ms ease;
+                color 150ms ease;
 }
 
 .widget-title > button:hover,
@@ -98,7 +96,6 @@ scrollbar slider {
     background-color: alpha(@background, 0.2);
     border-color: alpha(@background, 0.3);
     color: @background;
-    box-shadow: 0 2px 8px alpha(@color2, 0.3);
 }
 
 .widget-title > button:active,
@@ -135,17 +132,14 @@ scrollbar slider {
     padding: 8px 12px;
     min-height: 38px;
     min-width: 116px;
-    box-shadow: 0 2px 6px alpha(@foreground, 0.25);
     transition: background-color 200ms cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 200ms cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 250ms ease-in-out;
+                border-color 200ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .widget-buttons-grid button:hover,
 .widget-buttons-grid flowboxchild > button:hover {
     background-color: alpha(@background, 0.18);
     border-color: alpha(@background, 0.28);
-    box-shadow: 0 4px 14px alpha(@foreground, 0.35);
 }
 
 .widget-buttons-grid button:active,
@@ -159,7 +153,6 @@ scrollbar slider {
 .widget-buttons-grid flowboxchild > button.toggle:checked,
 .widget-buttons-grid flowboxchild > button.active {
     background: linear-gradient(135deg, @color3, @color2);
-    border: 1px solid alpha(@background, 0.3);
     color: @background;
 }
 
@@ -197,7 +190,6 @@ scale trough {
     border-radius: 999px;
     min-height: 16px;
     min-width: 140px;
-    box-shadow: inset 0 1px 3px alpha(@foreground, 0.4);
     transition: background-color 200ms ease;
 }
 
@@ -210,7 +202,6 @@ scale highlight {
     border: none;
     border-radius: 999px;
     min-height: 16px;
-    box-shadow: 0 2px 10px alpha(@color2, 0.45);
 }
 
 scale slider {
@@ -234,7 +225,6 @@ scale slider {
 
 .widget-mpris .widget-mpris-album-art {
     border-radius: 14px;
-    box-shadow: 0 4px 14px alpha(@foreground, 0.55);
     margin-right: 14px;
     -gtk-icon-size: 54px;
     min-width: 54px;
@@ -266,15 +256,13 @@ scale slider {
     padding: 4px;
     margin: 2px 4px;
     transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1),
-                color 160ms ease,
-                box-shadow 160ms ease;
+                color 160ms ease;
 }
 
 .widget-mpris .widget-mpris-player button:hover,
 .widget-mpris .widget-mpris-player .mpris-overlay button:hover {
     background-color: alpha(@background, 0.2);
     color: @background;
-    box-shadow: 0 0 10px alpha(@color2, 0.45);
 }
 
 .widget-mpris .widget-mpris-player button:active,
@@ -302,7 +290,12 @@ scale slider {
     min-height: 4px;
 }
 
-.notification-row {
+.notification-row,                                                    
+.notification-row:focus,                                              
+.notification-row:hover,                                              
+.notification-group,                                                  
+.notification-group:focus,                                            
+.notification-group:hover  {
     background: transparent;
     outline: none;
     margin: 0;
@@ -315,21 +308,17 @@ scale slider {
 
 .notification-row .notification-background .notification,
 .notification {
-    background-color: alpha(@background, 0.08);
     border-radius: 16px;
     padding: 12px 14px;
     margin: 4px 0;
-    box-shadow: 0 4px 16px alpha(@foreground, 0.25);
     transition: background-color 200ms cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 200ms cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 250ms ease-in-out;
+                border-color 200ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .notification-row:first-child .notification-background .notification,
 .notification.critical {
     background: linear-gradient(135deg, alpha(@color5, 0.35), alpha(@color3, 0.22));
     border: 1px solid alpha(@color5, 0.55);
-    box-shadow: 0 6px 20px alpha(@color5, 0.35);
 }
 
 .notification-default-action {
@@ -350,7 +339,6 @@ scale slider {
     border-radius: 999px;
     margin-right: 12px;
     -gtk-icon-size: 42px;
-    box-shadow: 0 2px 6px alpha(@foreground, 0.4);
 }
 
 .notification-content .app-icon {
@@ -382,18 +370,13 @@ scale slider {
 }
 
 .close-button {
-    background-color: alpha(@background, 0.1);
-    border: 1px solid alpha(@background, 0.1);
-    border-radius: 999px;
-    color: alpha(@background, 0.7);
-    min-width: 22px;
-    min-height: 22px;
-    padding: 0;
-    margin-top: 6px;
-    margin-right: 6px;
-    transition: background-color 180ms cubic-bezier(0.16, 1, 0.3, 1),
-                color 180ms ease,
-                box-shadow 200ms ease;
+        opacity: 0;
+        min-width: 0;
+        min-height: 0;
+        padding: 0;
+        margin: 0;
+        border: none;
+        background: transparent;
 }
 
 .close-button:hover {
