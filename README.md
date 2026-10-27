@@ -3,7 +3,7 @@
 [![Arch Linux](https://img.shields.io/badge/Arch-Linux-1793D1?logo=arch-linux&logoColor=white)](https://archlinux.org/)
 [![Hyprland](https://img.shields.io/badge/Hyprland-000000?style=flat&logo=hyprland&logoColor=white)](https://hyprland.org/)
 
-A beautifully customized, highly dynamic Hyprland setup for Arch Linux. Focused on seamless glassmorphism aesthetics, live video wallpapers, and 100% automated dynamic theming. 
+A beautifully customized, highly dynamic Hyprland setup for Arch Linux. Focused on seamless glassmorphism aesthetics, live video wallpapers, and 100% automated dynamic theming.
 ### Desktop Overview
 
 <table align="center" width="100%">
@@ -11,13 +11,13 @@ A beautifully customized, highly dynamic Hyprland setup for Arch Linux. Focused 
     <td colspan="3"><img src="demo/photo2.png" alt="Terminal and Waybar" width="100%"/></td>
     <td colspan="3"><img src="demo/photo1.png" alt="Clean Desktop" width="100%"/></td>
   </tr>
-  
+
   <tr>
     <td colspan="2"><img src="demo/photo4.png" alt="Theme 1" width="100%"/></td>
     <td colspan="2"><img src="demo/photo5.png" alt="Theme 2" width="100%"/></td>
     <td colspan="2"><img src="demo/photo3.png" alt="Theme 3" width="100%"/></td>
   </tr>
-  
+
   <tr>
     <td colspan="6"><img src="https://github.com/user-attachments/assets/83d07be0-cdea-468b-8759-9998b8f11219" alt="Wlogout Menu" width="100%"/></td>
   </tr>
@@ -98,7 +98,7 @@ The main modifier key is `SUPER`.
 
 1. Clone this repository to your home folder.
 2. Ensure you have the required dependencies installed via `pacman` or `yay`:
-   
+
    ```bash
    yay -S hyprland waybar rofi-wayland kitty waypaper mpvpaper swaybg wallust ffmpeg starship zsh ttf-fira-code ttf-nerd-fonts-symbols adw-gtk-theme papirus-icon-theme bibata-cursor-theme-bin nwg-look qt5ct qt6ct
    ```
