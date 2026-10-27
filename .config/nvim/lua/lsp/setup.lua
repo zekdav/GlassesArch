@@ -132,23 +132,6 @@ local servers = {
       },
     },
   },
-  ts_ls = {
-    settings = {
-      typescript = {
-        inlayHints = {
-          includeInlayParameterNameHints = "all",
-        },
-      },
-      javascript = {
-        inlayHints = {
-          includeInlayParameterNameHints = "all",
-        },
-      },
-    },
-  },
-  html = {
-    filetypes = { "html", "htmldjango" },
-  },
   cssls = {
     settings = {
       css = { validate = true, lint = { unknownAtRules = "ignore" } },
