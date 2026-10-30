@@ -43,7 +43,7 @@ hl.bind(M .. " + K", hl.dsp.layout("consume_or_expel prev"))
 hl.bind(M .. " + mouse:272", hl.dsp.window.drag(), { mouse = true })
 hl.bind(M .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
 
-hl.bind(M .. " + SUPER_L", hl.dsp.exec_cmd("rofi -show drun -theme ~/.config/rofi/rounded-pink-dark"))
+hl.bind(M .. " + SUPER_L", hl.dsp.exec_cmd("rofi -show drun -theme ~/.config/rofi/rounded-pink-dark"), {release = true})
 hl.bind(M .. " + N", hl.dsp.exec_cmd("swaync-client -t -sw"))
 hl.bind(M .. " + Print", hl.dsp.exec_cmd('grim -g "$(slurp)" - | satty --filename -'))
 

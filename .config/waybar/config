@@ -4,9 +4,20 @@
     "height": 53,
     "spacing": 5,
     "margin-bottom": -11,
-    "modules-left": [ "hyprland/workspaces" ],
-    "modules-center": ["custom/dynamic_pill"],
-    "modules-right": [ "network", "pulseaudio", "bluetooth", "battery", "temperature", "clock" ],
+    "modules-left": [
+        "hyprland/workspaces"
+    ],
+    "modules-center": [
+        "custom/dynamic_pill"
+    ],
+    "modules-right": [
+        "network",
+        "pulseaudio",
+        "bluetooth",
+        "battery",
+        "temperature",
+        "clock"
+    ],
     "hyprland/workspaces": {
         "format": "{icon}",
         "format-active": " {icon} ",
@@ -26,9 +37,9 @@
     },
     "clock": {
         "timezone": "Europe/Warsaw",
-        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        "format": "{:%H:%M}",
+        "tooltip-format": "{:%A %d %B}",
         "interval": 60,
-        "format": "{:%I:%M}",
         "max-length": 25
     },
     "temperature": {
@@ -46,11 +57,17 @@
             "warning": 30,
             "critical": 15
         },
-        "format": "{capacity}%  {icon}",
-        "format-charging": "{capacity}% {icon}",
-        "format-plugged": "{capacity}% {icon}",
+        "format": "{capacity}   {icon}",
+        "format-charging": "{capacity} {icon}",
+        "format-plugged": "{capacity} {icon}",
         "tooltip-format": "{timeTo}",
-        "format-icons": ["", "", "", "", ""]
+        "format-icons": [
+            "",
+            "",
+            "",
+            "",
+            ""
+        ]
     },
     "network": {
         "format-wifi": "    {essid}",
@@ -58,10 +75,15 @@
         "format-linked": "{ifname} (No IP) ",
         "format-disconnected": "⚠ Disconnected",
         "tooltip-format": "{essid} ({signalStrength}%)",
-        "format-icons": ["", "", "", ""],
+        "format-icons": [
+            "",
+            "",
+            "",
+            ""
+        ],
         "on-click": "nm-connection-editor"
     },
-   "bluetooth": {
+    "bluetooth": {
         "format": " {status}",
         "format-connected": "{device_alias}",
         "tooltip-format": "{controller_alias}\t{controller_address}\n\n{num_connections} connected",
@@ -77,7 +99,11 @@
         "format-bluetooth-muted": " {icon}",
         "format-muted": " Muted",
         "format-icons": {
-            "default": ["", "", ""]
+            "default": [
+                "",
+                "",
+                ""
+            ]
         },
         "on-click": "pavucontrol",
         "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"

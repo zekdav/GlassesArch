@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Prevent overlapping executions if user spams shortcut
 LOCK_FILE="${XDG_RUNTIME_DIR:-/tmp}/cycle_wall.lock"
 exec 200>"$LOCK_FILE"
 flock -n 200 || exit 0
@@ -56,7 +55,6 @@ NEXT_INDEX=$(( (INDEX + 1) % ARRAY_LENGTH ))
 NEXT_WALL="${FILES[$NEXT_INDEX]}"
 NEXT_WALL_NAME=$(basename "$NEXT_WALL")
 
-# Change wallpaper seamlessly via mpvpaper socket
 send_to_mpv() {
     [ -S "$SOCKET" ] && pgrep -x mpvpaper >/dev/null 2>&1 && \
     echo "loadfile \"$1\"" | socat - "$SOCKET" >/dev/null 2>&1
@@ -70,12 +68,10 @@ fi
 
 echo "$NEXT_WALL" > "$STATE_FILE"
 
-# Sync with waypaper config so reboot/restore preserves choice
 if [ -f ~/.config/waypaper/config.ini ]; then
     sed -i "s|^wallpaper =.*|wallpaper = ${NEXT_WALL/#$HOME/~}|" ~/.config/waypaper/config.ini
 fi
 
-# Thumbnail extraction for video/gif wallpapers
 EXT="${NEXT_WALL##*.}"
 if [[ "${EXT,,}" =~ ^(mp4|webm|mkv|gif)$ ]]; then
     THUMB="$CACHE_DIR/thumb_${NEXT_WALL_NAME}.jpg"
@@ -87,12 +83,9 @@ else
     PREVIEW_IMG="$NEXT_WALL"
 fi
 
-# Send notification immediately with image icon and synchronous replace
 notify-send -a "Wallpaper" -i "$PREVIEW_IMG" "Wallpaper changed" "$NEXT_WALL_NAME" -h string:x-canonical-private-synchronous:wallpaper
 
-# Release lock before spawning background work so rapid cycling is not blocked
 flock -u 200
 exec 200>&-
 
-# Update color schemes and system components in the background
 "$SCRIPTS_DIR/wall_color.sh" "$PREVIEW_IMG" >/dev/null 2>&1 &

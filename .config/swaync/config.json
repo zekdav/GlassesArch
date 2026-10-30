@@ -10,7 +10,7 @@
   "control-center-margin-right": 0,
   "control-center-margin-left": 0,
   "control-center-width": 430,
-  "control-center-height": 680,
+  "control-center-height": 780,
   "control-center-layer": "overlay",
   "control-center-exclusive-zone": true,
   "layer": "overlay",
@@ -25,7 +25,7 @@
   "timeout": 0,
   "timeout-low": 0,
   "timeout-critical": 0,
-  "notification-window-width": 0,
+  "notification-window-width": 400,
   "fit-to-screen": false,
   "relative-timestamps": true,
   "keyboard-shortcuts": true,
@@ -60,10 +60,10 @@
   "widget-config": {
     "title#quicksettings": {
       "text": "Quick Settings",
-        "clear-all-button": false
+      "clear-all-button": false
     },
     "buttons-grid": {
-      "buttons-per-row": 3,
+      "buttons-per-row": 2,
       "actions": [
         {
           "label": "\udb81\udda9   Wi-Fi",
@@ -83,14 +83,14 @@
           "label": "\udb80\udc9b   DND",
           "type": "toggle",
           "active": false,
-          "command": "swaync-client -d -sw",
-          "update-command": "swaync-client -D"
+          "command": "[[ $SWAYNC_TOGGLE_STATE == true ]] && swaync-client -dn -sw || swaync-client -df -sw",
+          "update-command": "swaync-client -D -sw"
         },
         {
           "label": "\udb81\udd94   Night Light",
           "type": "toggle",
           "active": false,
-          "command": "if pgrep -x hyprsunset >/dev/null; then pkill -x hyprsunset; else hyprsunset -t 4500 & fi",
+          "command": "if [[ $SWAYNC_TOGGLE_STATE == true ]]; then pkill -x hyprsunset; nohup hyprsunset -t 5000 >/dev/null 2>&1 & else pkill -x hyprsunset; fi",
           "update-command": "pgrep -x hyprsunset >/dev/null && echo true || echo false"
         },
         {
@@ -110,7 +110,7 @@
       ]
     },
     "volume": {
-      "label": "Volume      ",
+      "label": "󰕾",
       "show-per-app": false,
       "show-per-app-icon": true,
       "show-per-app-label": true,
@@ -120,17 +120,17 @@
       "collapse-button-label": "\udb80\udd40"
     },
     "backlight": {
-      "label": "Brightness",
+      "label": "󰃠",
       "device": "nvidia_0",
       "subsystem": "backlight",
       "min": 5
     },
     "mpris": {
+      "image-size": 72,
+      "image-radius": 12,
       "show-album-art": "always",
-      "autohide": false,
-      "blacklist": [
-        "playerctld"
-      ],
+      "autohide": true,
+      "blacklist": ["playerctld"],
       "loop-carousel": true
     },
     "title#notifications": {

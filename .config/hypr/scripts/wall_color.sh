@@ -4,7 +4,7 @@ SCRIPTS_DIR="$(dirname "$(readlink -f "$0")")"
 
 sed -i 's/palette = ".*/palette = "light"/' ~/.config/wallust/wallust.toml
 
-wallust run "$IMG"
+wallust run -s "$IMG"
 
 sleep 0.05
 

@@ -1,7 +1,7 @@
 @import "colors.css";
 
 * {
-  font-family: Cantarell, Inter, 'SF Pro Display';
+  font-family: Cantarell, Inter, "SF Pro Display";
   border: none;
   min-height: 0;
 }
@@ -179,9 +179,15 @@ window#waybar {
 }
 
 @keyframes gradient {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 @keyframes blink {
@@ -192,9 +198,15 @@ window#waybar {
 }
 
 @keyframes warning-pulse {
-  0% { background-color: rgba(239, 83, 80, 0.4); }
-  50% { background-color: rgba(211, 47, 47, 0.7); }
-  100% { background-color: rgba(239, 83, 80, 0.4); }
+  0% {
+    background-color: rgba(239, 83, 80, 0.4);
+  }
+  50% {
+    background-color: rgba(211, 47, 47, 0.7);
+  }
+  100% {
+    background-color: rgba(239, 83, 80, 0.4);
+  }
 }
 
 #bluetooth {
@@ -213,7 +225,6 @@ window#waybar {
 }
 
 #bluetooth.off {
-  background-color: transparent;
   border: none;
 }
 
@@ -260,9 +271,11 @@ window#waybar {
 }
 
 #network.disconnected {
-  background: radial-gradient(circle,
-      rgba(255, 255, 255, 0.2) 0%,
-      rgba(255, 255, 255, 0.05) 100%);
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
 }
 
 #network.linked,
