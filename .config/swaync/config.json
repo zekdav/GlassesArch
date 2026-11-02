@@ -104,8 +104,8 @@
           "label": "\udb81\udd82   VPN",
           "type": "toggle",
           "active": false,
-          "command": "vpn_id=$(nmcli -g NAME,TYPE con show | grep -i vpn | head -n1 | cut -d: -f1); if [ -n \"$vpn_id\" ]; then if [ \"$SWAYNC_TOGGLE_STATE\" = true ]; then nmcli con up id \"$vpn_id\"; else nmcli con down id \"$vpn_id\"; fi; fi",
-          "update-command": "nmcli con show --active | grep -qi vpn && echo true || echo false"
+          "command": "if [ \"$SWAYNC_TOGGLE_STATE\" = true ]; then mullvad connect; else mullvad disconnect; fi",
+          "update-command": "mullvad status | grep -qi 'connected' && echo true || echo false"
         }
       ]
     },
