@@ -9,6 +9,7 @@ end
 
 _G.wallust = colors
 
+require("components.plugins")
 require("components.environments")
 require("components.monitors")
 require("components.general")
