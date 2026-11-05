@@ -1,0 +1,18 @@
+[opener]
+nvim = [
+    { run = "nvim %s", block = true, desc = "Neovim", for = "unix" }
+]
+
+
+timg = [
+    { run = "timg -p k %s; echo -e \nClick; read -r _ < /dev/tty", block = true, desc = "timg", for = "unix" }
+]
+
+[open]
+prepend_rules = [
+    { mime = "text/*", use = "nvim" },
+    { mime = "application/json", use = "nvim" },
+
+    { mime = "image/*", use = "timg" },
+    { mime = "video/*", use = "timg" }
+]

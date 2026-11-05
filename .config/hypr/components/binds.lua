@@ -2,7 +2,7 @@ local M = "SUPER"
 
 hl.bind(M .. " + RETURN", hl.dsp.exec_cmd("kitty"))
 hl.bind(M .. " + B", hl.dsp.exec_cmd("firefox-developer-edition"))
-hl.bind(M .. " + E", hl.dsp.exec_cmd("nautilus --new-window"))
+hl.bind(M .. " + E", hl.dsp.exec_cmd("kitty -e yazi"))
 hl.bind(M .. " + W", hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/hypr/scripts/cycle_wall.sh"))
 
 hl.bind(M .. " + Q", hl.dsp.window.close(), { repeating = true })
@@ -43,7 +43,11 @@ hl.bind(M .. " + K", hl.dsp.layout("consume_or_expel prev"))
 hl.bind(M .. " + mouse:272", hl.dsp.window.drag(), { mouse = true })
 hl.bind(M .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
 
-hl.bind(M .. " + SUPER_L", hl.dsp.exec_cmd("rofi -show drun -theme ~/.config/rofi/rounded-pink-dark"), {release = true})
+hl.bind(
+	M .. " + SUPER_L",
+	hl.dsp.exec_cmd("rofi -show drun -theme ~/.config/rofi/rounded-pink-dark"),
+	{ release = true }
+)
 hl.bind(M .. " + N", hl.dsp.exec_cmd("swaync-client -t -sw"))
 hl.bind(M .. " + Print", hl.dsp.exec_cmd('grim -g "$(slurp)" - | satty --filename -'))
 
@@ -79,3 +83,7 @@ hl.bind(M .. " + ALT + 0", hl.dsp.window.move({ workspace = 10 }))
 
 hl.bind(M .. " + S", hl.dsp.workspace.toggle_special("scratch"))
 hl.bind(M .. " + SHIFT + S", hl.dsp.window.move({ workspace = "special:scratch" }))
+
+hl.bind("SUPER + TAB", function()
+	hl.plugin.scrolloverview.overview("toggle all")
+end)
